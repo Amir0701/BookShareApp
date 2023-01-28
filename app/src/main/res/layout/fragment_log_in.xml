@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.LoginActivity">
+    tools:context=".ui.view.LogInFragment">
 
 
     <TextView
@@ -18,13 +18,14 @@
 
     <EditText
         android:id="@+id/emailEditText"
+        style="@style/LoginEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_background"
         android:drawableStart="@drawable/ic_email_32"
-        style="@style/LoginEditText"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emailTextView"
-        app:layout_constraintStart_toStartOf="parent"/>
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/passwordTextView"
@@ -38,14 +39,15 @@
 
     <EditText
         android:id="@+id/passwordEditText"
+        style="@style/LoginEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_background"
-        style="@style/LoginEditText"
         android:drawableStart="@drawable/ic_baseline_key_32"
         android:inputType="textPassword"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/passwordTextView"
-        app:layout_constraintStart_toStartOf="parent"/>
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/entryButton"

@@ -21,8 +21,10 @@ class ApiViewModel(val app: Application, val repository: Repository): AndroidVie
     fun makeRequest(email: String, password: String) = viewModelScope.launch {
         val user = User(0, email, password, "", "" ,ArrayList())
         authentication.postValue(Resource.Loading())
+        Log.i("TAG", "Make response")
         val response = repository.login(user)
         authentication.postValue(makeResponse(response))
+        Log.i("TAG", "success")
     }
 
     private fun makeResponse(response: Response<AuthorizationResponse>): Resource<AuthorizationResponse> {
