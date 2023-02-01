@@ -37,6 +37,9 @@ class LogInFragment : Fragment() {
 
     private var viewModel: ApiViewModel? = null
 
+    private var email: String? = null
+    private var pass: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,6 +71,10 @@ class LogInFragment : Fragment() {
                     it.data?.let { data ->
                         Log.i("TAG", data.accessToken)
                         val intent = Intent(activity, MainActivity::class.java)
+                        if(email != null && pass != null){
+                            Log.i("TAG", "Save data")
+                            (activity as SignUpActivity).saveData(email!!, pass!!)
+                        }
                         startActivity(intent)
                         activity?.finish()
                     }
@@ -89,10 +96,10 @@ class LogInFragment : Fragment() {
         button.setOnClickListener {
             Log.i("TAG", "On log in click")
             if(emailEditText.text.toString().trim() != "" && password.text.toString().trim() != ""){
-                val email = emailEditText.text.toString()
-                val password = password.text.toString()
+                email = emailEditText.text.toString()
+                pass = password.text.toString()
                 Log.i("TAG", "Before request")
-                val res = viewModel?.makeRequest(email, password)
+                val res = viewModel?.makeRequest(email!!, pass!!)
                 Log.i("TAG", res.toString())
             }
             else{
