@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="yellow">#FFEB3B</color>
     <color name="primary_yellow">#E6CF05</color>
+    <color name="search_back_color">#FBF6F6</color>
 </resources>

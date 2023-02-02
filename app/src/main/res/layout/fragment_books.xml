@@ -16,18 +16,22 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.appcompat.widget.SearchView
+            android:id="@+id/booksSearchview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:elevation="8dp"/>
+            android:elevation="8dp"
+            android:background="@color/search_back_color"
+            app:queryHint="Поиск книг"/>
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:id="@+id/filterImageView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/img"
             android:layout_marginTop="18dp"
             android:layout_marginBottom="10dp"
