@@ -12,20 +12,25 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.util.Util
 import com.example.sharebookapp.R
 import com.example.sharebookapp.data.repository.Repository
+import com.example.sharebookapp.ioc.RepositoryComponent
 import com.example.sharebookapp.ui.model.ApiViewModel
 import com.example.sharebookapp.ui.model.ApiViewModelFactory
 import com.example.sharebookapp.ui.model.ViewModelable
 import com.example.sharebookapp.util.Resource
 import com.example.sharebookapp.util.Utils
+import javax.inject.Inject
 
 class AuthenticationActivity : AppCompatActivity() {
     private var viewModel: ApiViewModel? = null
-    private val repository = Repository()
+
+    private lateinit var repository: Repository
+
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.authentication_login)
+        repository = Repository()
         sharedPreferences = getSharedPreferences(Utils.PREF_NAME, MODE_PRIVATE)
         val viewModelFactory = ApiViewModelFactory(application, repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[ApiViewModel::class.java]
