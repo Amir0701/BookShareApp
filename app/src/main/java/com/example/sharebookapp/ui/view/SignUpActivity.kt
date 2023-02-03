@@ -29,7 +29,6 @@ class SignUpActivity : AppCompatActivity(), ViewModelable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
-
         val viewModelFactory = ApiViewModelFactory(application, repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[ApiViewModel::class.java]
         sharedPreferences = getSharedPreferences(Utils.PREF_NAME, MODE_PRIVATE)
