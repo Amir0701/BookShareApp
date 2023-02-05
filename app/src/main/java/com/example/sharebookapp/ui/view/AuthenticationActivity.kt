@@ -31,8 +31,8 @@ class AuthenticationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.authentication_login)
-        repository = DaggerRepositoryComponent.builder().build().getRepository()
         sharedPreferences = getSharedPreferences(Utils.PREF_NAME, MODE_PRIVATE)
+        repository = DaggerRepositoryComponent.builder().build().getRepository()
         val viewModelFactory = ApiViewModelFactory(application, repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[ApiViewModel::class.java]
         val email: String? = sharedPreferences.getString("Email", "")
