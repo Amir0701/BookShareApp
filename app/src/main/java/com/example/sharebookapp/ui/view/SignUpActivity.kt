@@ -1,28 +1,16 @@
 package com.example.sharebookapp.ui.view
 
-import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.sharebookapp.R
-import com.example.sharebookapp.data.model.User
 import com.example.sharebookapp.data.repository.Repository
-import com.example.sharebookapp.data.repository.RetrofitInstance
 import com.example.sharebookapp.ioc.DaggerRepositoryComponent
 import com.example.sharebookapp.ui.model.ApiViewModel
 import com.example.sharebookapp.ui.model.ApiViewModelFactory
 import com.example.sharebookapp.ui.model.ViewModelable
-import com.example.sharebookapp.util.Resource
 import com.example.sharebookapp.util.Utils
-import retrofit2.Retrofit
 
 class SignUpActivity : AppCompatActivity(), ViewModelable {
     private var viewModel: ApiViewModel? = null
