@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_booksFragment_to_publicationDetailFragment"
             app:destination="@id/publicationDetailFragment" />
+        <action
+            android:id="@+id/action_booksFragment_to_newPublicationFragment"
+            app:destination="@id/newPublicationFragment" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
@@ -33,4 +36,9 @@
         android:name="com.example.sharebookapp.ui.view.PublicationDetailFragment"
         android:label="fragment_publication_detail"
         tools:layout="@layout/fragment_publication_detail" />
+    <fragment
+        android:id="@+id/newPublicationFragment"
+        android:name="com.example.sharebookapp.ui.view.NewPublicationFragment"
+        android:label="fragment_new_publication"
+        tools:layout="@layout/fragment_new_publication" />
 </navigation>
