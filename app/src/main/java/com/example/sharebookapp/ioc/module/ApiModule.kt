@@ -1,8 +1,8 @@
-package com.example.sharebookapp.ioc
+package com.example.sharebookapp.ioc.module
 
 import android.util.Log
 import com.example.sharebookapp.data.repository.Api
-import com.example.sharebookapp.data.repository.SingScope
+import com.example.sharebookapp.ioc.scope.AppScope
 import com.example.sharebookapp.util.Utils
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -19,7 +19,7 @@ class ApiModule {
         return retrofit.create(Api::class.java)
     }
 
-    @SingScope
+    @AppScope
     @Provides
     fun retrofit(okHttpClient: OkHttpClient, gsonConverterFactory: GsonConverterFactory, gson: Gson): Retrofit{
         Log.i("Sco", "Retro")

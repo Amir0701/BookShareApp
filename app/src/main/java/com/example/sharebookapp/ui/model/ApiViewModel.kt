@@ -2,19 +2,17 @@ package com.example.sharebookapp.ui.model
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.sharebookapp.data.model.AuthorizationResponse
 import com.example.sharebookapp.data.model.User
-import com.example.sharebookapp.data.repository.Repository
+import com.example.sharebookapp.data.repository.AuthenticationRepository
 import com.example.sharebookapp.util.Resource
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 
-class ApiViewModel(val app: Application, val repository: Repository): AndroidViewModel(app) {
+class ApiViewModel(val app: Application, val repository: AuthenticationRepository): AndroidViewModel(app) {
     var responseAuthentification: Response<AuthorizationResponse>? = null
     val authentication = MutableLiveData<Resource<AuthorizationResponse>>()
 

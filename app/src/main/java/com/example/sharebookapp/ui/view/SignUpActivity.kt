@@ -4,9 +4,9 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import com.example.sharebookapp.App
 import com.example.sharebookapp.R
-import com.example.sharebookapp.data.repository.Repository
-import com.example.sharebookapp.ioc.DaggerRepositoryComponent
+import com.example.sharebookapp.data.repository.AuthenticationRepository
 import com.example.sharebookapp.ui.model.ApiViewModel
 import com.example.sharebookapp.ui.model.ApiViewModelFactory
 import com.example.sharebookapp.ui.model.ViewModelable
@@ -14,13 +14,14 @@ import com.example.sharebookapp.util.Utils
 
 class SignUpActivity : AppCompatActivity(), ViewModelable {
     private var viewModel: ApiViewModel? = null
-    private lateinit var repository: Repository
+    private lateinit var repository: AuthenticationRepository
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
-        repository = DaggerRepositoryComponent.builder().build().getRepository()
+        val signUpActivityComponent = (application as App).appComponent.getSignUpActivityComponent()
+        repository = signUpActivityComponent.getRepository()
         val viewModelFactory = ApiViewModelFactory(application, repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[ApiViewModel::class.java]
         sharedPreferences = getSharedPreferences(Utils.PREF_NAME, MODE_PRIVATE)

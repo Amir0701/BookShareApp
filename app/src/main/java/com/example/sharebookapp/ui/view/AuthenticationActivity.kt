@@ -5,26 +5,21 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.util.Util
+import com.example.sharebookapp.App
 import com.example.sharebookapp.R
-import com.example.sharebookapp.data.repository.Repository
-import com.example.sharebookapp.ioc.DaggerRepositoryComponent
-import com.example.sharebookapp.ioc.RepositoryComponent
+import com.example.sharebookapp.data.repository.AuthenticationRepository
 import com.example.sharebookapp.ui.model.ApiViewModel
 import com.example.sharebookapp.ui.model.ApiViewModelFactory
-import com.example.sharebookapp.ui.model.ViewModelable
 import com.example.sharebookapp.util.Resource
 import com.example.sharebookapp.util.Utils
-import javax.inject.Inject
 
 class AuthenticationActivity : AppCompatActivity() {
     private var viewModel: ApiViewModel? = null
 
-    private lateinit var repository: Repository
+    private lateinit var repository: AuthenticationRepository
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -32,7 +27,8 @@ class AuthenticationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.authentication_login)
         sharedPreferences = getSharedPreferences(Utils.PREF_NAME, MODE_PRIVATE)
-        repository = DaggerRepositoryComponent.builder().build().getRepository()
+        val authenticationActivityComponent = (application as App).appComponent.getAuthenticationActivityComponent()
+        repository = authenticationActivityComponent.getRepository()
         val viewModelFactory = ApiViewModelFactory(application, repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[ApiViewModel::class.java]
         val email: String? = sharedPreferences.getString("Email", "")

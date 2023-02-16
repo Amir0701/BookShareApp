@@ -1,4 +1,4 @@
-package com.example.sharebookapp.ioc
+package com.example.sharebookapp.ioc.module
 
 import dagger.Module
 import dagger.Provides
