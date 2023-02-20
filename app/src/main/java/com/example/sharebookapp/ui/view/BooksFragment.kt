@@ -8,10 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.findFragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.sharebookapp.R
+import com.example.sharebookapp.data.model.Publication
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import javax.inject.Inject
 
 class BooksFragment : Fragment() {
+    @Inject
+    private lateinit var adapter: BookAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -23,9 +29,18 @@ class BooksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as MainActivity).mainActivityComponent.getBooksFragmentComponent().inject(this)
         val addPublication = view.findViewById<FloatingActionButton>(R.id.addPublicationButton)
         addPublication.setOnClickListener {
             findNavController().navigate(R.id.action_booksFragment_to_newPublicationFragment)
         }
+
+        adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
+            override fun onItemClick(publication: Publication) {
+                val bundle = Bundle()
+                bundle.putSerializable("choosenPublication", publication)
+                findNavController().navigate(R.id.action_booksFragment_to_publicationDetailFragment, bundle)
+            }
+        })
     }
 }

@@ -9,4 +9,5 @@ import dagger.Component
 interface AppComponent {
     fun getAuthenticationActivityComponent(): AuthenticationActivityComponent
     fun getSignUpActivityComponent(): SignUpActivityComponent
+    fun getMainActivityComponent(): MainActivityComponent
 }

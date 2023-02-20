@@ -35,7 +35,10 @@
         android:id="@+id/publicationDetailFragment"
         android:name="com.example.sharebookapp.ui.view.PublicationDetailFragment"
         android:label="fragment_publication_detail"
-        tools:layout="@layout/fragment_publication_detail" />
+        tools:layout="@layout/fragment_publication_detail" >
+        <argument android:name="choosenPublication"
+            app:argType="com.example.sharebookapp.data.model.Publication" />
+    </fragment>
     <fragment
         android:id="@+id/newPublicationFragment"
         android:name="com.example.sharebookapp.ui.view.NewPublicationFragment"

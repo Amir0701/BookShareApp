@@ -11,4 +11,4 @@ data class Publication(
     val description: String,
     val publishedAt: Timestamp,
     val images: List<Image>
-)
+): java.io.Serializable

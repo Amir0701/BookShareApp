@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sharebookapp.R
 import com.example.sharebookapp.data.model.Publication
+import com.example.sharebookapp.ioc.scope.MainActivityScope
 import javax.inject.Inject
 
+@MainActivityScope
 class BookAdapter @Inject constructor(): RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
 
     class BookViewHolder(view: View): RecyclerView.ViewHolder(view){
@@ -42,6 +44,10 @@ class BookAdapter @Inject constructor(): RecyclerView.Adapter<BookAdapter.BookVi
         val currentPublication = publications.currentList[position]
         holder.cardTitle.text = currentPublication.name
         holder.cardDate.text = currentPublication.publishedAt.toString()
+
+        holder.itemView.setOnClickListener {
+            onBookItemClickListener?.onItemClick(currentPublication)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -51,4 +57,16 @@ class BookAdapter @Inject constructor(): RecyclerView.Adapter<BookAdapter.BookVi
     fun setPublication(publicationList: List<Publication>){
         publications.submitList(publicationList)
     }
+
+    private var onBookItemClickListener: OnBookItemClickListener? = null
+
+    fun setOnBookItemClickListener(onBookItemClickListener: OnBookItemClickListener){
+        this.onBookItemClickListener = onBookItemClickListener
+    }
+
+    interface OnBookItemClickListener{
+        fun onItemClick(publication: Publication)
+    }
+
+
 }
