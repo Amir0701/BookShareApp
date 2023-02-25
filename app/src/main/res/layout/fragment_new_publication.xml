@@ -124,6 +124,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/descriptionPublication" />
 
+        <TextView
+            android:id="@+id/chosenImageName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/purple_500"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:textSize="14sp"
+            android:text="DSADDDDDD"
+            android:maxLines="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addImageButton"/>
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/publishButton"
             android:layout_width="wrap_content"

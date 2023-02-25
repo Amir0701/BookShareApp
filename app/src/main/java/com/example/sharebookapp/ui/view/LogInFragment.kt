@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.example.sharebookapp.App
 import com.example.sharebookapp.R
 import com.example.sharebookapp.ui.model.ApiViewModel
 import com.example.sharebookapp.ui.model.ViewModelable
@@ -70,6 +71,7 @@ class LogInFragment : Fragment() {
                     progressBar.visibility = View.INVISIBLE
                     it.data?.let { data ->
                         Log.i("TAG", data.accessToken)
+                        ((activity as SignUpActivity).application as App).accessToken = data.accessToken
                         val intent = Intent(activity, MainActivity::class.java)
                         if(email != null && pass != null){
                             Log.i("TAG", "Save data")

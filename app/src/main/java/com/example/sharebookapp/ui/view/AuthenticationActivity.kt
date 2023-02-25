@@ -44,6 +44,7 @@ class AuthenticationActivity : AppCompatActivity() {
                             it.data?.let { data ->
                                 Log.i("TAG", "Succ")
                                 Log.i("TAG", data.accessToken)
+                                (application as App).accessToken = data.accessToken
                                 val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
                             }

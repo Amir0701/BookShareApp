@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class BooksFragment : Fragment() {
     @Inject
-    private lateinit var adapter: BookAdapter
+    lateinit var adapter: BookAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
