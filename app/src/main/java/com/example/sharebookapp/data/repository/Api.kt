@@ -3,8 +3,7 @@ package com.example.sharebookapp.data.repository
 import com.example.sharebookapp.data.model.AuthorizationResponse
 import com.example.sharebookapp.data.model.User
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface Api {
     @POST("/auth/signup")
@@ -18,4 +17,7 @@ interface Api {
         @Body
         user: User
     ): Response<AuthorizationResponse>
+
+    @GET("/user")
+    suspend fun getCurrentUser(@Header("Authorization") token: String): Response<User>
 }

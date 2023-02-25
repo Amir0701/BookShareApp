@@ -33,9 +33,9 @@ class PublicationDetailFragment : Fragment() {
         val publication = args.choosenPublication
 
         publicationName.text = publication.name
-        publicationCategory.text = publication.categoryId.toString()
+        publicationCategory.text = publication.category.toString()
         publicationDescription.text = publication.description
-        publicationCity.text = publication.cityId.toString()
+        publicationCity.text = publication.city.toString()
     }
 
 }

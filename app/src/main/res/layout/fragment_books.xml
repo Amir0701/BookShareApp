@@ -55,11 +55,12 @@
         android:id="@+id/addPublicationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
         android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
         android:src="@drawable/ic_post_add"
         app:backgroundTint="@color/yellow"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
     
 </androidx.constraintlayout.widget.ConstraintLayout>
