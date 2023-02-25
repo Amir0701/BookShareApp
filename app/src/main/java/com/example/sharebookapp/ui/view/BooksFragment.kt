@@ -15,8 +15,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import javax.inject.Inject
 
 class BooksFragment : Fragment() {
-    //@Inject
-    //lateinit var adapter: BookAdapter
+    @Inject
+    lateinit var adapter: BookAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,12 +35,12 @@ class BooksFragment : Fragment() {
             findNavController().navigate(R.id.action_booksFragment_to_newPublicationFragment)
         }
 
-//        adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
-//            override fun onItemClick(publication: Publication) {
-//                val bundle = Bundle()
-//                bundle.putSerializable("choosenPublication", publication)
-//                findNavController().navigate(R.id.action_booksFragment_to_publicationDetailFragment, bundle)
-//            }
-//        })
+        adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
+            override fun onItemClick(publication: Publication) {
+                val bundle = Bundle()
+                bundle.putSerializable("choosenPublication", publication)
+                findNavController().navigate(R.id.action_booksFragment_to_publicationDetailFragment, bundle)
+            }
+        })
     }
 }

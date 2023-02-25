@@ -1,6 +1,7 @@
 package com.example.sharebookapp.data.repository
 
 import com.example.sharebookapp.data.model.AuthorizationResponse
+import com.example.sharebookapp.data.model.City
 import com.example.sharebookapp.data.model.User
 import retrofit2.Response
 import retrofit2.http.*
@@ -20,4 +21,7 @@ interface Api {
 
     @GET("/user")
     suspend fun getCurrentUser(@Header("Authorization") token: String): Response<User>
+
+    @GET("/city/all")
+    suspend fun getAllCities(@Header("Authorization") token: String): Response<List<City>>
 }
