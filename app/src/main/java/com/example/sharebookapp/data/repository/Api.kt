@@ -1,6 +1,7 @@
 package com.example.sharebookapp.data.repository
 
 import com.example.sharebookapp.data.model.AuthorizationResponse
+import com.example.sharebookapp.data.model.Category
 import com.example.sharebookapp.data.model.City
 import com.example.sharebookapp.data.model.User
 import retrofit2.Response
@@ -24,4 +25,7 @@ interface Api {
 
     @GET("/city/all")
     suspend fun getAllCities(@Header("Authorization") token: String): Response<List<City>>
+
+    @GET("/category/all")
+    suspend fun getAllCategories(@Header("Authorization") token: String): Response<List<Category>>
 }

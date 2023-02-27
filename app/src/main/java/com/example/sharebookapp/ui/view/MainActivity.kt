@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.sharebookapp.App
 import com.example.sharebookapp.R
+import com.example.sharebookapp.data.repository.CategoryRepository
 import com.example.sharebookapp.data.repository.CityRepository
 import com.example.sharebookapp.data.repository.UserRepository
 import com.example.sharebookapp.ioc.component.MainActivityComponent
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var mainActivityViewModel: MainActivityViewModel
     lateinit var userRepository: UserRepository
     lateinit var cityRepository: CityRepository
+    lateinit var categoryRepository: CategoryRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         userRepository = mainActivityComponent.getUserRepository()
         cityRepository = mainActivityComponent.getCityRepository()
-        val viewModelFactory = MainActivityViewModelFactory((application as App), userRepository, cityRepository)
+        categoryRepository = mainActivityComponent.getCategoryRepository()
+        val viewModelFactory = MainActivityViewModelFactory((application as App), userRepository, cityRepository, categoryRepository)
         mainActivityViewModel = ViewModelProvider(this, viewModelFactory)[MainActivityViewModel::class.java]
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val navController: View? = findViewById(R.id.bottomFragmentContainer)

@@ -1,7 +1,6 @@
 package com.example.sharebookapp.ui.view
 
 import android.app.Activity.RESULT_OK
-import android.content.ContentResolver.MimeTypeInfo
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,30 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.core.content.MimeTypeFilter
 import androidx.lifecycle.Observer
 import com.example.sharebookapp.R
 import com.example.sharebookapp.ui.model.MainActivityViewModel
 import com.example.sharebookapp.util.Resource
-import okhttp3.MultipartReader
-import retrofit2.http.Multipart
 import java.io.BufferedReader
-import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
-import java.io.InputStream
 import java.io.InputStreamReader
-import java.util.stream.IntStream
 
 
 class NewPublicationFragment : Fragment() {
     private val CHOOSE_IMAGE: Int = 101
     private var chosenImageName: TextView? = null
     private lateinit var mainActivityViewModel: MainActivityViewModel
-    private lateinit var spinner: Spinner
+    private lateinit var spinnerCity: Spinner
+    private lateinit var spinnerCategory: Spinner
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,13 +39,17 @@ class NewPublicationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         chosenImageName = view.findViewById(R.id.chosenImageName)
         mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
-        spinner = view.findViewById(R.id.cityList)
+        spinnerCity = view.findViewById(R.id.cityList)
+        spinnerCategory = view.findViewById(R.id.categoryList)
+
         val choseImageButton:TextView = view.findViewById(R.id.addImageButton)
         choseImageButton.setOnClickListener {
             chooseImage()
         }
         observeCity()
+        observeCategory()
         mainActivityViewModel.getAllCities()
+        mainActivityViewModel.getAllCategories()
     }
 
     private fun observeCity(){
@@ -66,7 +63,7 @@ class NewPublicationFragment : Fragment() {
                         }
                         val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, str)
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinner.adapter = spinnerAdapter
+                        spinnerCity.adapter = spinnerAdapter
                     }
                 }
 
@@ -79,6 +76,37 @@ class NewPublicationFragment : Fragment() {
                 }
             }
 
+        })
+    }
+
+    private fun observeCategory(){
+        mainActivityViewModel.categoryResponse.observe(viewLifecycleOwner, Observer { resource ->
+            when(resource){
+                is Resource.Success -> {
+                    resource.data?.let {categories ->
+                        val categoriesNames = mutableListOf<String>()
+                        categories.forEach {
+                            categoriesNames.add(it.name)
+                        }
+
+                        val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_item,
+                            categoriesNames
+                        )
+                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        spinnerCategory.adapter = spinnerAdapter
+                    }
+                }
+
+                is Resource.Error -> {
+
+                }
+
+                is Resource.Loading -> {
+
+                }
+            }
         })
     }
 
