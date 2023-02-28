@@ -1,9 +1,7 @@
 package com.example.sharebookapp.data.repository
 
-import com.example.sharebookapp.data.model.AuthorizationResponse
-import com.example.sharebookapp.data.model.Category
-import com.example.sharebookapp.data.model.City
-import com.example.sharebookapp.data.model.User
+import com.example.sharebookapp.data.model.*
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -28,4 +26,17 @@ interface Api {
 
     @GET("/category/all")
     suspend fun getAllCategories(@Header("Authorization") token: String): Response<List<Category>>
+
+    @POST("/publication")
+    suspend fun postPublication(
+        @Body publication: Publication,
+        @Header("Authorization") token: String
+    ): Response<Publication>
+
+    @POST("/image")
+    @Multipart
+    suspend fun postImages(
+        @Part body: Array<MultipartBody>,
+        @Header("Authorization") token: String
+    )
 }

@@ -10,9 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.sharebookapp.App
 import com.example.sharebookapp.R
-import com.example.sharebookapp.data.repository.CategoryRepository
-import com.example.sharebookapp.data.repository.CityRepository
-import com.example.sharebookapp.data.repository.UserRepository
+import com.example.sharebookapp.data.repository.*
 import com.example.sharebookapp.ioc.component.MainActivityComponent
 import com.example.sharebookapp.ui.model.MainActivityViewModel
 import com.example.sharebookapp.ui.model.MainActivityViewModelFactory
@@ -26,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var userRepository: UserRepository
     lateinit var cityRepository: CityRepository
     lateinit var categoryRepository: CategoryRepository
+    lateinit var publicationRepository: PublicationRepository
+    lateinit var imageRepository: ImageRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +34,10 @@ class MainActivity : AppCompatActivity() {
         userRepository = mainActivityComponent.getUserRepository()
         cityRepository = mainActivityComponent.getCityRepository()
         categoryRepository = mainActivityComponent.getCategoryRepository()
-        val viewModelFactory = MainActivityViewModelFactory((application as App), userRepository, cityRepository, categoryRepository)
+        publicationRepository = mainActivityComponent.getPublicationRepository()
+        imageRepository = mainActivityComponent.getImageRepository()
+
+        val viewModelFactory = MainActivityViewModelFactory((application as App), userRepository, cityRepository, categoryRepository, publicationRepository, imageRepository)
         mainActivityViewModel = ViewModelProvider(this, viewModelFactory)[MainActivityViewModel::class.java]
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val navController: View? = findViewById(R.id.bottomFragmentContainer)

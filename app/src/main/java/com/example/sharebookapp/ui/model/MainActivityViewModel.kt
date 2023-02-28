@@ -6,10 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.sharebookapp.App
 import com.example.sharebookapp.data.model.Category
 import com.example.sharebookapp.data.model.City
+import com.example.sharebookapp.data.model.Publication
 import com.example.sharebookapp.data.model.User
-import com.example.sharebookapp.data.repository.CategoryRepository
-import com.example.sharebookapp.data.repository.CityRepository
-import com.example.sharebookapp.data.repository.UserRepository
+import com.example.sharebookapp.data.repository.*
 import com.example.sharebookapp.util.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,10 +18,13 @@ import kotlin.math.E
 class MainActivityViewModel(private val app: App,
                             private val userRepository: UserRepository,
                             private val cityRepository: CityRepository,
-                            private val categoryRepository: CategoryRepository): AndroidViewModel(app) {
+                            private val categoryRepository: CategoryRepository,
+                            private val publicationRepository: PublicationRepository,
+                            private val imageRepository: ImageRepository): AndroidViewModel(app) {
     val userResponse = MutableLiveData<Resource<User>>()
     val cityResponse = MutableLiveData<Resource<List<City>>>()
     val categoryResponse = MutableLiveData<Resource<List<Category>>>()
+    var publication = MutableLiveData<Resource<Publication>>()
 
     fun getCurrentUser() = viewModelScope.launch(Dispatchers.IO) {
         userResponse.postValue(Resource.Loading())
@@ -67,6 +69,24 @@ class MainActivityViewModel(private val app: App,
     }
 
     private fun getAllCategoriesResponse(response: Response<List<Category>>): Resource<List<Category>>{
+        if(response.isSuccessful){
+            response.body()?.let {
+                return Resource.Success(it)
+            }
+            throw Exception()
+        }
+        else{
+            return Resource.Error(response.message())
+        }
+    }
+
+    fun postPublication(publication: Publication) = viewModelScope.launch(Dispatchers.IO) {
+        this@MainActivityViewModel.publication.postValue(Resource.Loading())
+        val response = publicationRepository.postPublication(publication, "Bearer ${app.accessToken}")
+        this@MainActivityViewModel.publication.postValue(postPublicationResponse(response))
+    }
+
+    private fun postPublicationResponse(response: Response<Publication>): Resource<Publication>{
         if(response.isSuccessful){
             response.body()?.let {
                 return Resource.Success(it)
