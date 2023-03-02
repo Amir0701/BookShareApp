@@ -4,4 +4,4 @@ data class Image(
     val id: Long,
     val publicationId: Long,
     val path: String
-)
+): java.io.Serializable

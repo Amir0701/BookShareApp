@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.example.sharebookapp.R
 import com.example.sharebookapp.data.model.Publication
 
@@ -33,9 +34,13 @@ class PublicationDetailFragment : Fragment() {
         val publication = args.choosenPublication
 
         publicationName.text = publication.name
-        publicationCategory.text = publication.category.toString()
+        publicationCategory.text = publication.category.name
         publicationDescription.text = publication.description
-        publicationCity.text = publication.city.toString()
+        publicationCity.text = publication.city.name
+
+        Glide.with(requireContext())
+            .load("https://cdn.respublica.ru/uploads/00/00/00/hn/by/4233ae58519647f4.jpg")
+            .into(publicationImage)
     }
 
 }
