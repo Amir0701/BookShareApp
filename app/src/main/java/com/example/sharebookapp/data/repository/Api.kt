@@ -40,4 +40,7 @@ interface Api {
         @Query("publication_id") publicationId: Long,
         @Header("Authorization") token: String
     )
+
+    @GET("publication/all")
+    suspend fun getAllPublications(@Header("Authorization") token: String): Response<List<Publication>>
 }

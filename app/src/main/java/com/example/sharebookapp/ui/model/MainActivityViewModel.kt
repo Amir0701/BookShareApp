@@ -26,6 +26,7 @@ class MainActivityViewModel(private val app: App,
     val cityResponse = MutableLiveData<Resource<List<City>>>()
     val categoryResponse = MutableLiveData<Resource<List<Category>>>()
     var publication = MutableLiveData<Resource<Publication>>()
+    val publications = MutableLiveData<Resource<List<Publication>>>()
 
     fun getCurrentUser() = viewModelScope.launch(Dispatchers.IO) {
         userResponse.postValue(Resource.Loading())
@@ -101,5 +102,22 @@ class MainActivityViewModel(private val app: App,
 
     fun postImages(multipartBody: Array<MultipartBody.Part>, publicationId: Long) = viewModelScope.launch(Dispatchers.IO){
         imageRepository.postImages(multipartBody, publicationId,"Bearer ${app.accessToken}")
+    }
+
+    fun getAllPublications() = viewModelScope.launch(Dispatchers.IO){
+        publications.postValue(Resource.Loading())
+        val response = publicationRepository.getAllPublications("Bearer ${app.accessToken}")
+        publications.postValue(getPublicationsResponse(response))
+    }
+
+    private fun getPublicationsResponse(response: Response<List<Publication>>): Resource<List<Publication>>{
+        if(response.isSuccessful){
+            response.body()?.let {
+                return Resource.Success(it)
+            }
+            return Resource.Error(response.message())
+        }
+        else
+            return Resource.Error(response.message())
     }
 }

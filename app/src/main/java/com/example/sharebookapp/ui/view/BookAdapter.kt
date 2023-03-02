@@ -1,5 +1,6 @@
 package com.example.sharebookapp.ui.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,12 +9,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.sharebookapp.R
 import com.example.sharebookapp.data.model.Publication
 import com.example.sharebookapp.ioc.scope.MainActivityScope
+import java.io.File
 import javax.inject.Inject
 
-@MainActivityScope
+
 class BookAdapter @Inject constructor(): RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
 
     class BookViewHolder(view: View): RecyclerView.ViewHolder(view){
@@ -44,7 +47,21 @@ class BookAdapter @Inject constructor(): RecyclerView.Adapter<BookAdapter.BookVi
         val currentPublication = publications.currentList[position]
         holder.cardTitle.text = currentPublication.name
         holder.cardDate.text = currentPublication.publishedAt.toString()
+        holder.cardGenre.text = currentPublication.category.name
 
+//        Glide.with(holder.itemView.context)
+//            .load(File(currentPublication.images[0].path))
+//            .into(holder.cardImage)
+
+        Log.i("img", currentPublication.images.size.toString())
+        if(currentPublication.images.isNotEmpty()){
+            //val file = File("E:\\ShareBook\\55_MV5BMTkxNTk1ODcxNl5BMl5BanBnXkFtZTcwMDI1OTMzOQ@@._V1_")
+            //val bytes = file.readBytes()
+            Glide.with(holder.itemView.context)
+                .load("https://cdn.respublica.ru/uploads/00/00/00/hn/by/4233ae58519647f4.jpg")
+                .into(holder.cardImage)
+
+        }
         holder.itemView.setOnClickListener {
             onBookItemClickListener?.onItemClick(currentPublication)
         }
@@ -67,6 +84,4 @@ class BookAdapter @Inject constructor(): RecyclerView.Adapter<BookAdapter.BookVi
     interface OnBookItemClickListener{
         fun onItemClick(publication: Publication)
     }
-
-
 }
