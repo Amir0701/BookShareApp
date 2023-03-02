@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.sharebookapp.App
 import com.example.sharebookapp.R
 import com.example.sharebookapp.data.model.Category
@@ -73,22 +74,22 @@ class NewPublicationFragment : Fragment() {
         mainActivityViewModel.getAllCategories()
 
         addPublicationButton.setOnClickListener {
-//            val cityId = spinnerCity.selectedItemId
-//            val chosenCity = mainActivityViewModel.cityResponse.value?.data?.get(cityId.toInt())
-//            Log.i("city", chosenCity?.name.toString())
-//            val categoryId = spinnerCategory.selectedItemId
-//            val chosenCategory = mainActivityViewModel.categoryResponse.value?.data?.get(categoryId.toInt())
-//            Log.i("category", chosenCategory?.name.toString())
-//
-//            if (chosenCategory != null && chosenCity != null) {
-//                publish(chosenCategory, chosenCity)
-//            }
-//            else{
-//                Log.e("chosen", "category or city is null")
-//            }
+            val cityId = spinnerCity.selectedItemId
+            val chosenCity = mainActivityViewModel.cityResponse.value?.data?.get(cityId.toInt())
+            val categoryId = spinnerCategory.selectedItemId
+            val chosenCategory = mainActivityViewModel.categoryResponse.value?.data?.get(categoryId.toInt())
 
-            postImages()
-            Log.i("image", "Success")
+            if (chosenCategory != null && chosenCity != null) {
+                if(fileUris.isEmpty()){
+                    Toast.makeText(requireContext(), "Выберите фото", Toast.LENGTH_SHORT)
+                }
+                else {
+                    publish(chosenCategory, chosenCity)
+                }
+            }
+            else{
+                Log.e("chosen", "category or city is null")
+            }
         }
     }
 
@@ -108,11 +109,11 @@ class NewPublicationFragment : Fragment() {
                 }
 
                 is Resource.Loading -> {
-
+                    Log.i("loading", "Cities is loading")
                 }
 
                 is Resource.Error -> {
-
+                    Log.e("observeCity", resource.message.toString())
                 }
             }
 
@@ -140,11 +141,11 @@ class NewPublicationFragment : Fragment() {
                 }
 
                 is Resource.Error -> {
-
+                    Log.e("observeCategory", resource.message.toString())
                 }
 
                 is Resource.Loading -> {
-
+                    Log.i("loading", "Categories is loading")
                 }
             }
         })
@@ -154,15 +155,16 @@ class NewPublicationFragment : Fragment() {
         mainActivityViewModel.publication.observe(viewLifecycleOwner, Observer { resource ->
             when(resource){
                 is Resource.Success -> {
-
+                    resource.data?.id?.let { postImages(it) }
                 }
 
                 is Resource.Error -> {
-
+                    Toast.makeText(requireContext(), "Ошибка при публикации", Toast.LENGTH_SHORT)
+                    Log.e("observePublication", resource.message.toString())
                 }
 
                 is Resource.Loading -> {
-
+                    Log.i("loading", "Publication is loading")
                 }
             }
         })
@@ -192,15 +194,15 @@ class NewPublicationFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK){
             if(data != null){
-                chosenImageName?.text = data.data?.path
-                data.data?.let { fileUris.add(it)
-                Log.i("uri", it.toString())}
+                val index: Int? = data.data?.path?.lastIndexOf('/')
+                chosenImageName?.text =
+                    data.data?.path?.length?.let { data.data?.path?.substring(index!!, it) }
                 val clipData = data.clipData
-//                for (i in 0 until clipData?.itemCount!!){
-//                    val item: ClipData.Item = clipData.getItemAt(i)
-//                    val uri = item.uri
-//                    fileUris.add(uri)
-//                }
+                for (i in 0 until clipData?.itemCount!!){
+                    val item: ClipData.Item = clipData.getItemAt(i)
+                    val uri = item.uri
+                    fileUris.add(uri)
+                }
             }
         }
     }
@@ -231,10 +233,9 @@ class NewPublicationFragment : Fragment() {
         }
     }
 
-    private fun postImages(){
+    private fun postImages(publicationId: Long){
         val parts: MutableList<MultipartBody.Part> = mutableListOf()
         for (i in 0 until fileUris.size){
-            //val file = com.example.sharebookapp.util.FileUtils.getFile(requireContext(), fileUris[i])
             val file = File(RealPathUtil.getRealPath(requireContext(), fileUris[i]))
             val multipartFile = MultipartBody.Part.createFormData(
                 "files",
@@ -244,6 +245,7 @@ class NewPublicationFragment : Fragment() {
             parts.add(multipartFile)
         }
 
-        mainActivityViewModel.postImages(parts.toTypedArray(), 139)
+        mainActivityViewModel.postImages(parts.toTypedArray(), publicationId)
+        findNavController().navigate(R.id.action_newPublicationFragment_to_booksFragment2)
     }
 }
