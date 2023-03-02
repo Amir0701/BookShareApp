@@ -6,4 +6,6 @@
     <string name="booksTitle">Книги</string>
     <string name="favoriteTitle">Избранное</string>
     <string name="profile">Профиль</string>
+
+    <string name="internal_storage">Internal storage</string>
 </resources>

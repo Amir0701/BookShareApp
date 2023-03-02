@@ -36,7 +36,8 @@ interface Api {
     @POST("/image")
     @Multipart
     suspend fun postImages(
-        @Part body: Array<MultipartBody>,
+        @Part body: Array<MultipartBody.Part>,
+        @Query("publication_id") publicationId: Long,
         @Header("Authorization") token: String
     )
 }

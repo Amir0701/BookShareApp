@@ -12,6 +12,7 @@ import com.example.sharebookapp.data.repository.*
 import com.example.sharebookapp.util.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import retrofit2.Response
 import kotlin.math.E
 
@@ -96,5 +97,9 @@ class MainActivityViewModel(private val app: App,
         else{
             return Resource.Error(response.message())
         }
+    }
+
+    fun postImages(multipartBody: Array<MultipartBody.Part>, publicationId: Long) = viewModelScope.launch(Dispatchers.IO){
+        imageRepository.postImages(multipartBody, publicationId,"Bearer ${app.accessToken}")
     }
 }
