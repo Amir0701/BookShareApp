@@ -11,10 +11,13 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.sharebookapp.R
 import com.example.sharebookapp.data.model.Publication
+import com.example.sharebookapp.ui.model.MainActivityViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class PublicationDetailFragment : Fragment() {
     private val args: PublicationDetailFragmentArgs by navArgs()
+    private lateinit var mainActivityViewModel: MainActivityViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +35,7 @@ class PublicationDetailFragment : Fragment() {
         val publicationDescription: TextView = view.findViewById(R.id.descriptionDetailPublication)
         val publicationCity: TextView = view.findViewById(R.id.cityDetailPublication)
         val publication = args.choosenPublication
+        val addToFavorite: FloatingActionButton = view.findViewById(R.id.addToFavorite)
 
         publicationName.text = publication.name
         publicationCategory.text = publication.category.name
@@ -39,8 +43,17 @@ class PublicationDetailFragment : Fragment() {
         publicationCity.text = publication.city.name
 
         Glide.with(requireContext())
-            .load("https://cdn.respublica.ru/uploads/00/00/00/hn/by/4233ae58519647f4.jpg")
+            .load(R.drawable.great)
             .into(publicationImage)
+
+        addToFavorite.setOnClickListener {
+            mainActivityViewModel.addToFavorite(publication.id)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
     }
 
 }

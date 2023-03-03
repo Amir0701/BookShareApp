@@ -4,4 +4,6 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(private val api: Api) {
     suspend fun getCurrentUser(token: String) = api.getCurrentUser(token)
+    suspend fun addToFavorite(userId: Long, publicationId: Long, token: String) =
+        api.addToFavorite(userId, publicationId, token)
 }

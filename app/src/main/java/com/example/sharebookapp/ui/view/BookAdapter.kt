@@ -58,7 +58,7 @@ class BookAdapter @Inject constructor(): RecyclerView.Adapter<BookAdapter.BookVi
             //val file = File("E:\\ShareBook\\55_MV5BMTkxNTk1ODcxNl5BMl5BanBnXkFtZTcwMDI1OTMzOQ@@._V1_")
             //val bytes = file.readBytes()
             Glide.with(holder.itemView.context)
-                .load("https://cdn.respublica.ru/uploads/00/00/00/hn/by/4233ae58519647f4.jpg")
+                .load(R.drawable.great)
                 .into(holder.cardImage)
 
         }

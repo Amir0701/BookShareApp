@@ -120,4 +120,8 @@ class MainActivityViewModel(private val app: App,
         else
             return Resource.Error(response.message())
     }
+
+    fun addToFavorite(publicationId: Long) = viewModelScope.launch(Dispatchers.IO) {
+        userRepository.addToFavorite(app.currentUser.id, publicationId, "Bearer ${app.accessToken}")
+    }
 }
