@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/booksFragment"
         android:name="com.example.sharebookapp.ui.view.BooksFragment"
-        android:label="fragment_books"
+        android:label="books"
         tools:layout="@layout/fragment_books" >
         <action
             android:id="@+id/action_booksFragment_to_publicationDetailFragment"
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.example.sharebookapp.ui.view.FavoritesFragment"
-        android:label="fragment_favorites"
+        android:label="favorites"
         tools:layout="@layout/fragment_favorites" >
         <action
             android:id="@+id/action_favoritesFragment_to_publicationDetailFragment"
@@ -29,8 +29,12 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.sharebookapp.ui.view.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        android:label="profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_publicationDetailFragment"
+            app:destination="@id/publicationDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/publicationDetailFragment"
         android:name="com.example.sharebookapp.ui.view.PublicationDetailFragment"

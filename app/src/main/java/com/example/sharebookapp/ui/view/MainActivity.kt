@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.sharebookapp.App
@@ -40,8 +41,8 @@ class MainActivity : AppCompatActivity() {
         val viewModelFactory = MainActivityViewModelFactory((application as App), userRepository, cityRepository, categoryRepository, publicationRepository, imageRepository)
         mainActivityViewModel = ViewModelProvider(this, viewModelFactory)[MainActivityViewModel::class.java]
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        val navController: View? = findViewById(R.id.bottomFragmentContainer)
-        navController?.findNavController()?.let {
+        val navController: NavController = this.findNavController(R.id.bottomFragmentContainer)
+        navController.let {
             Log.i("Frag", "set up")
             bottomNav.setupWithNavController(it)
         }
