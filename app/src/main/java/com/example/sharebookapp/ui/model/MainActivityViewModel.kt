@@ -27,6 +27,7 @@ class MainActivityViewModel(private val app: App,
     val categoryResponse = MutableLiveData<Resource<List<Category>>>()
     var publication = MutableLiveData<Resource<Publication>>()
     val publications = MutableLiveData<Resource<List<Publication>>>()
+    val favoritePublication = MutableLiveData<Resource<List<Publication>>>()
 
     fun getCurrentUser() = viewModelScope.launch(Dispatchers.IO) {
         userResponse.postValue(Resource.Loading())
@@ -123,5 +124,20 @@ class MainActivityViewModel(private val app: App,
 
     fun addToFavorite(publicationId: Long) = viewModelScope.launch(Dispatchers.IO) {
         userRepository.addToFavorite(app.currentUser.id, publicationId, "Bearer ${app.accessToken}")
+    }
+
+    fun getFavoritePublication() = viewModelScope.launch(Dispatchers.IO) {
+        favoritePublication.postValue(Resource.Loading())
+        val response = publicationRepository.getFavoritePublication(app.currentUser.id, "Bearer ${app.accessToken}")
+        favoritePublication.postValue(responseFavoritePublication(response))
+    }
+
+    private fun responseFavoritePublication(response: Response<List<Publication>>): Resource<List<Publication>>{
+        if(response.isSuccessful){
+            response.body()?.let {
+                return Resource.Success(it)
+            }
+        }
+        return Resource.Error(response.message())
     }
 }

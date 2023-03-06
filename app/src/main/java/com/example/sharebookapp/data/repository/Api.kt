@@ -49,4 +49,10 @@ interface Api {
         @Query("userId") userId: Long,
         @Query("publicationId") publicationId: Long,
         @Header("Authorization") token: String)
+
+    @GET("publication/favorite")
+    suspend fun getFavoritePublication(
+        @Query("userId") userId: Long,
+        @Header("Authorization") token: String
+    ): Response<List<Publication>>
 }
