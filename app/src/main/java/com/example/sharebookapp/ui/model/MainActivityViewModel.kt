@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import retrofit2.Response
+import java.nio.file.DirectoryStream
 import kotlin.math.E
 
 class MainActivityViewModel(private val app: App,
@@ -28,6 +29,7 @@ class MainActivityViewModel(private val app: App,
     var publication = MutableLiveData<Resource<Publication>>()
     val publications = MutableLiveData<Resource<List<Publication>>>()
     val favoritePublication = MutableLiveData<Resource<List<Publication>>>()
+    val searchPublication = MutableLiveData<Resource<List<Publication>>>()
 
     fun getCurrentUser() = viewModelScope.launch(Dispatchers.IO) {
         userResponse.postValue(Resource.Loading())
@@ -138,6 +140,22 @@ class MainActivityViewModel(private val app: App,
                 return Resource.Success(it)
             }
         }
+        return Resource.Error(response.message())
+    }
+
+    fun getPublicationsByName(name: String) = viewModelScope.launch(Dispatchers.IO) {
+        searchPublication.postValue(Resource.Loading())
+        val response = publicationRepository.getPublicationsByName(name, "Bearer ${app.accessToken}")
+        searchPublication.postValue(responseSearchPublications(response))
+    }
+
+    private fun responseSearchPublications(response: Response<List<Publication>>): Resource<List<Publication>>{
+        if(response.isSuccessful){
+            response.body()?.let{
+                return Resource.Success(it)
+            }
+        }
+
         return Resource.Error(response.message())
     }
 }

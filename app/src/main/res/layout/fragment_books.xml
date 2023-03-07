@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <EditText
-            android:id="@+id/booksSearchview"
+            android:id="@+id/booksSearchView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="1"

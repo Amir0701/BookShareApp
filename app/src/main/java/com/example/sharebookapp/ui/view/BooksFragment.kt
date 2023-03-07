@@ -1,11 +1,16 @@
 package com.example.sharebookapp.ui.view
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -18,6 +23,10 @@ import com.example.sharebookapp.data.model.Publication
 import com.example.sharebookapp.ui.model.MainActivityViewModel
 import com.example.sharebookapp.util.Resource
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class BooksFragment : Fragment() {
@@ -25,6 +34,7 @@ class BooksFragment : Fragment() {
     lateinit var adapter: BookAdapter
     lateinit var mainActivityViewModel: MainActivityViewModel
     lateinit var booksRecycler: RecyclerView
+    lateinit var searchView: EditText
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +49,7 @@ class BooksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).mainActivityComponent.getBooksFragmentComponent().inject(this)
         booksRecycler = view.findViewById(R.id.booksRecyclerView)
+        searchView = view.findViewById(R.id.booksSearchView)
 
         val addPublication = view.findViewById<FloatingActionButton>(R.id.addPublicationButton)
         addPublication.setOnClickListener {
@@ -54,6 +65,46 @@ class BooksFragment : Fragment() {
         })
 
         initRecyclerView()
+//        searchView.addTextChangedListener(object : TextWatcher{
+//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//
+//            }
+//
+//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+////                p0?.let {
+////                    if(p0.toString().trim().isNotEmpty()){
+////                        mainActivityViewModel.getPublicationsByName(p0.toString().trim())
+////                    }
+////                    else
+////                        mainActivityViewModel.getAllPublications()
+////                }
+//            }
+//
+//            override fun afterTextChanged(p0: Editable?) {
+//                p0?.let {
+//                    if(p0.toString().trim().isNotEmpty()){
+//                        mainActivityViewModel.getPublicationsByName(p0.toString().trim())
+//                    }
+//                    else
+//                        mainActivityViewModel.getAllPublications()
+//                }
+//            }
+//        })
+        var job: Job? = null
+        searchView.addTextChangedListener { editable ->
+            job?.cancel()
+            job = MainScope().launch {
+                delay(500)
+                editable?.let {
+                    if(editable.toString().trim().isNotEmpty()){
+                        mainActivityViewModel.getPublicationsByName(editable.toString().trim())
+                    }
+                    else{
+                        mainActivityViewModel.getAllPublications()
+                    }
+                }
+            }
+        }
     }
 
     override fun onStart() {
@@ -61,6 +112,7 @@ class BooksFragment : Fragment() {
         mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
         observePublications()
         mainActivityViewModel.getAllPublications()
+        observeSearchPublications()
     }
 
     private fun initRecyclerView(){
@@ -70,7 +122,7 @@ class BooksFragment : Fragment() {
 
 
     private fun observePublications(){
-        mainActivityViewModel.publications.observe(viewLifecycleOwner, Observer { resource ->
+        mainActivityViewModel.searchPublication.observe(viewLifecycleOwner, Observer { resource ->
             when(resource){
                 is Resource.Loading -> {
                     Log.i("loading", "All publications are loading")
@@ -87,6 +139,27 @@ class BooksFragment : Fragment() {
                 }
             }
 
+        })
+    }
+
+    private fun observeSearchPublications(){
+        mainActivityViewModel.publications.observe(viewLifecycleOwner, Observer { resource ->
+            when(resource){
+                is Resource.Loading -> {
+                    Log.i("loading", "searching")
+                }
+
+                is Resource.Success -> {
+                    resource.data?.let {
+                        Log.i("succ", "Success search")
+                        adapter.setPublication(it)
+                    }
+                }
+
+                is Resource.Error -> {
+                    Log.i("search", resource.message.toString())
+                }
+            }
         })
     }
 }
