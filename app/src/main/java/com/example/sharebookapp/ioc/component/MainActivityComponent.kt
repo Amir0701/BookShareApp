@@ -11,6 +11,7 @@ import dagger.Subcomponent
 interface MainActivityComponent {
     fun getBooksFragmentComponent(): BooksFragmentComponent
     fun getFavoritesFragmentComponent(): FavoritesFragmentComponent
+    fun getProfileFragmentComponent(): ProfileFragmentComponent
     fun getUserRepository(): UserRepository
     fun getCityRepository(): CityRepository
     fun getCategoryRepository(): CategoryRepository
