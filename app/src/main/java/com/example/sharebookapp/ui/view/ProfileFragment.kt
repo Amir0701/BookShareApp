@@ -1,5 +1,6 @@
 package com.example.sharebookapp.ui.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -30,6 +31,7 @@ class ProfileFragment : Fragment() {
         (activity as MainActivity).mainActivityComponent.getProfileFragmentComponent().inject(this)
         profileRecyclerView = view.findViewById(R.id.profileRecyclerView)
         initRecyclerView()
+        onClick()
     }
 
     private fun initRecyclerView(){
@@ -42,5 +44,20 @@ class ProfileFragment : Fragment() {
         profileAdapter.setProfile(list)
         profileRecyclerView.adapter = profileAdapter
         profileRecyclerView.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun onClick(){
+        profileAdapter.setOnClickListener(object : ProfileAdapter.OnProfileItemOnClickListener{
+            override fun onItemClick(position: Int) {
+                if(position == 4){
+                    val shared = (activity as MainActivity).sharedPreferences
+                    shared.edit().clear().commit()
+
+                    val intent = Intent(activity, SignUpActivity::class.java)
+                    startActivity(intent)
+                    (activity as MainActivity).finish()
+                }
+            }
+        })
     }
 }

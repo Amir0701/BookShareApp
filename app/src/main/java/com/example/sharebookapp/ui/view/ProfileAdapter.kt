@@ -27,6 +27,9 @@ class ProfileAdapter @Inject constructor(): RecyclerView.Adapter<ProfileAdapter.
         val profile = profileList[position]
         holder.icon.setImageResource(profile.imageResource)
         holder.title.text = profile.title
+        holder.itemView.setOnClickListener {
+            onProfileItemOnClickListener?.onItemClick(position)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -35,5 +38,15 @@ class ProfileAdapter @Inject constructor(): RecyclerView.Adapter<ProfileAdapter.
 
     fun setProfile(list: List<Profile>){
         profileList = list
+    }
+
+    interface OnProfileItemOnClickListener{
+        fun onItemClick(position: Int)
+    }
+
+    private var onProfileItemOnClickListener: OnProfileItemOnClickListener ?= null
+
+    fun setOnClickListener(onProfileItemOnClickListener: OnProfileItemOnClickListener){
+        this.onProfileItemOnClickListener = onProfileItemOnClickListener
     }
 }

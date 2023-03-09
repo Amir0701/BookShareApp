@@ -1,5 +1,6 @@
 package com.example.sharebookapp.ui.view
 
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import com.example.sharebookapp.ioc.component.MainActivityComponent
 import com.example.sharebookapp.ui.model.MainActivityViewModel
 import com.example.sharebookapp.ui.model.MainActivityViewModelFactory
 import com.example.sharebookapp.util.Resource
+import com.example.sharebookapp.util.Utils
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import javax.inject.Inject
 
@@ -27,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var categoryRepository: CategoryRepository
     lateinit var publicationRepository: PublicationRepository
     lateinit var imageRepository: ImageRepository
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         categoryRepository = mainActivityComponent.getCategoryRepository()
         publicationRepository = mainActivityComponent.getPublicationRepository()
         imageRepository = mainActivityComponent.getImageRepository()
+        sharedPreferences = getSharedPreferences(Utils.PREF_NAME, MODE_PRIVATE)
 
         val viewModelFactory = MainActivityViewModelFactory((application as App), userRepository, cityRepository, categoryRepository, publicationRepository, imageRepository)
         mainActivityViewModel = ViewModelProvider(this, viewModelFactory)[MainActivityViewModel::class.java]
