@@ -246,6 +246,5 @@ class NewPublicationFragment : Fragment() {
         }
 
         mainActivityViewModel.postImages(parts.toTypedArray(), publicationId)
-        findNavController().navigate(R.id.action_newPublicationFragment_to_booksFragment2)
     }
 }

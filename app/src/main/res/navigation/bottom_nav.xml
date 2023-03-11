@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_booksFragment_to_publicationDetailFragment"
             app:destination="@id/publicationDetailFragment" />
-        <action
-            android:id="@+id/action_booksFragment_to_newPublicationFragment"
-            app:destination="@id/newPublicationFragment" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
@@ -45,8 +42,5 @@
         android:name="com.example.sharebookapp.ui.view.NewPublicationFragment"
         android:label="fragment_new_publication"
         tools:layout="@layout/fragment_new_publication" >
-        <action
-            android:id="@+id/action_newPublicationFragment_to_booksFragment2"
-            app:destination="@id/booksFragment" />
     </fragment>
 </navigation>

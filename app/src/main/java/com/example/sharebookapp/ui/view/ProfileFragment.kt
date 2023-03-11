@@ -36,7 +36,7 @@ class ProfileFragment : Fragment() {
 
     private fun initRecyclerView(){
         val list = mutableListOf<Profile>()
-        list.add(Profile("Мои книги", R.drawable.my_book_30_mdpi))
+        list.add(Profile("Мои книги", R.drawable.mybook23_ldpi))
         list.add(Profile("Редактировать профиль",R.drawable.ic_edit))
         list.add(Profile("Поменять пароль", R.drawable.ic_password_24))
         list.add(Profile("Информация", R.drawable.ic__info_24))

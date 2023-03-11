@@ -51,10 +51,6 @@ class BooksFragment : Fragment() {
         booksRecycler = view.findViewById(R.id.booksRecyclerView)
         searchView = view.findViewById(R.id.booksSearchView)
 
-        val addPublication = view.findViewById<FloatingActionButton>(R.id.addPublicationButton)
-        addPublication.setOnClickListener {
-            findNavController().navigate(R.id.action_booksFragment_to_newPublicationFragment)
-        }
 
         adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
             override fun onItemClick(publication: Publication) {
@@ -65,31 +61,6 @@ class BooksFragment : Fragment() {
         })
 
         initRecyclerView()
-//        searchView.addTextChangedListener(object : TextWatcher{
-//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//
-//            }
-//
-//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-////                p0?.let {
-////                    if(p0.toString().trim().isNotEmpty()){
-////                        mainActivityViewModel.getPublicationsByName(p0.toString().trim())
-////                    }
-////                    else
-////                        mainActivityViewModel.getAllPublications()
-////                }
-//            }
-//
-//            override fun afterTextChanged(p0: Editable?) {
-//                p0?.let {
-//                    if(p0.toString().trim().isNotEmpty()){
-//                        mainActivityViewModel.getPublicationsByName(p0.toString().trim())
-//                    }
-//                    else
-//                        mainActivityViewModel.getAllPublications()
-//                }
-//            }
-//        })
         var job: Job? = null
         searchView.addTextChangedListener { editable ->
             job?.cancel()

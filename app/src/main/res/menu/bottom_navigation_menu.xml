@@ -6,6 +6,11 @@
         android:icon="@drawable/ic_menu_book"/>
 
     <item
+        android:id="@+id/newPublicationFragment"
+        android:title="Добавить"
+        android:icon="@drawable/ic_post_add"/>
+
+    <item
         android:id="@+id/favoritesFragment"
         android:title="@string/favoriteTitle"
         android:icon="@drawable/ic_favorite_24"/>
