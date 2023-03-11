@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val navController: NavController = this.findNavController(R.id.bottomFragmentContainer)
         navController.let {
-            Log.i("Frag", "set up")
             bottomNav.setupWithNavController(it)
         }
         observe()

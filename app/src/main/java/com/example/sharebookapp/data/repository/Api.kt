@@ -61,4 +61,10 @@ interface Api {
         @Query("name") name: String,
         @Header("Authorization") token: String
     ): Response<List<Publication>>
+
+    @PUT("user/password")
+    suspend fun changePassword(
+        @Body password: Password,
+        @Header("Authorization") token: String
+    ): Response<User>
 }

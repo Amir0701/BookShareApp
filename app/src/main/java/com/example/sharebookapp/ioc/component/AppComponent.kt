@@ -10,4 +10,5 @@ interface AppComponent {
     fun getAuthenticationActivityComponent(): AuthenticationActivityComponent
     fun getSignUpActivityComponent(): SignUpActivityComponent
     fun getMainActivityComponent(): MainActivityComponent
+    fun getProfileActivityComponent(): ProfileActivityComponent
 }
