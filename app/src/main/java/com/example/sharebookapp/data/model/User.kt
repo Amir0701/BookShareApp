@@ -6,5 +6,5 @@ data class User(
     val password: String,
     val name: String,
     val phoneNumber: String,
-    val publications: List<Publication>
+    val publications: List<Publication>?
 )

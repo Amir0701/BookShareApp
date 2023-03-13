@@ -22,9 +22,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.view.EditProfileActivity"
+            android:exported="false"
+            android:label="@string/title_activity_edit_profile"
+            android:theme="@style/Theme.ShareBookApp.NoActionBar"
+            android:parentActivityName=".ui.view.MainActivity">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ui.view.ProfileActivity"
-            android:parentActivityName=".ui.view.MainActivity"
-            android:exported="false">
+            android:exported="false"
+            android:parentActivityName=".ui.view.MainActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

@@ -11,4 +11,5 @@ interface AppComponent {
     fun getSignUpActivityComponent(): SignUpActivityComponent
     fun getMainActivityComponent(): MainActivityComponent
     fun getProfileActivityComponent(): ProfileActivityComponent
+    fun getEditProfileActivityComponent(): EditProfileActivityComponent
 }

@@ -67,4 +67,10 @@ interface Api {
         @Body password: Password,
         @Header("Authorization") token: String
     ): Response<User>
+
+    @PUT("user/edit")
+    suspend fun updateUser(
+        @Body user: User,
+        @Header("Authorization") token: String
+    ): Response<User>
 }

@@ -49,6 +49,10 @@ class ProfileFragment : Fragment() {
     private fun onClick(){
         profileAdapter.setOnClickListener(object : ProfileAdapter.OnProfileItemOnClickListener{
             override fun onItemClick(position: Int) {
+                if(position == 1){
+                    val intent = Intent(activity, EditProfileActivity::class.java)
+                    startActivity(intent)
+                }
                 if(position == 2){
                     val intent = Intent(activity, ProfileActivity::class.java)
                     startActivity(intent)
