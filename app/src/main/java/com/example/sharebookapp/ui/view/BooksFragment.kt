@@ -17,8 +17,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView.*
 import com.example.sharebookapp.R
+import com.example.sharebookapp.data.model.Category
 import com.example.sharebookapp.data.model.Publication
 import com.example.sharebookapp.ui.model.MainActivityViewModel
 import com.example.sharebookapp.util.Resource
@@ -32,9 +33,13 @@ import javax.inject.Inject
 class BooksFragment : Fragment() {
     @Inject
     lateinit var adapter: BookAdapter
+    @Inject
+    lateinit var categoryAdapter: CategoryAdapter
+
     lateinit var mainActivityViewModel: MainActivityViewModel
     lateinit var booksRecycler: RecyclerView
     lateinit var searchView: EditText
+    lateinit var categoryRecyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,7 +55,7 @@ class BooksFragment : Fragment() {
         (activity as MainActivity).mainActivityComponent.getBooksFragmentComponent().inject(this)
         booksRecycler = view.findViewById(R.id.booksRecyclerView)
         searchView = view.findViewById(R.id.booksSearchView)
-
+        categoryRecyclerView = view.findViewById(R.id.genreRecyclerView)
 
         adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
             override fun onItemClick(publication: Publication) {
@@ -61,6 +66,7 @@ class BooksFragment : Fragment() {
         })
 
         initRecyclerView()
+        initCategoryRecyclerView()
         var job: Job? = null
         searchView.addTextChangedListener { editable ->
             job?.cancel()
@@ -91,6 +97,18 @@ class BooksFragment : Fragment() {
         booksRecycler.layoutManager = GridLayoutManager(context, 2)
     }
 
+    private fun initCategoryRecyclerView(){
+        val list = mutableListOf<Category>()
+        list.add(Category(1, "Роман", ArrayList()))
+        list.add(Category(2, "Триллер", ArrayList()))
+        list.add(Category(3, "Научная фантастика", ArrayList()))
+        list.add(Category(4, "Классика", ArrayList()))
+        list.add(Category(5, "Экономика", ArrayList()))
+        list.add(Category(6, "Право", ArrayList()))
+        categoryAdapter.categoryList = list
+        categoryRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        categoryRecyclerView.adapter = categoryAdapter
+    }
 
     private fun observePublications(){
         mainActivityViewModel.searchPublication.observe(viewLifecycleOwner, Observer { resource ->
