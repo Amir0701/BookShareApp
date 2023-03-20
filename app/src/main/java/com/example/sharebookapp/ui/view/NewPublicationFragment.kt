@@ -42,6 +42,8 @@ class NewPublicationFragment : Fragment() {
     private lateinit var nameEditText: EditText
     private lateinit var descriptionEditText: EditText
     private lateinit var addPublicationButton: FloatingActionButton
+    private lateinit var authorEditText: EditText
+
     private val fileUris = mutableListOf<Uri>()
 
     override fun onCreateView(
@@ -61,6 +63,7 @@ class NewPublicationFragment : Fragment() {
         nameEditText = view.findViewById(R.id.nameOfPublication)
         descriptionEditText = view.findViewById(R.id.descriptionPublication)
         addPublicationButton = view.findViewById(R.id.publishButton)
+        authorEditText = view.findViewById(R.id.authorOfPublication)
 
         val choseImageButton:TextView = view.findViewById(R.id.addImageButton)
         choseImageButton.setOnClickListener {
@@ -214,8 +217,12 @@ class NewPublicationFragment : Fragment() {
         }
         else{
             val desc = descriptionEditText.text.toString()
+            val author = authorEditText.text.toString()
             if(desc.isEmpty()){
                 Toast.makeText(context, "Введите описание публикации", Toast.LENGTH_SHORT)
+            }
+            else if(author.isEmpty()){
+                Toast.makeText(context, "Введите автор книги", Toast.LENGTH_SHORT)
             }
             else{
                 val newPublication = Publication(
@@ -224,6 +231,7 @@ class NewPublicationFragment : Fragment() {
                     category,
                     city,
                     name,
+                    author,
                     desc,
                     null,
                     ArrayList()

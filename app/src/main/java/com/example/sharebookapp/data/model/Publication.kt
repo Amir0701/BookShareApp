@@ -10,6 +10,7 @@ data class Publication(
     @SerializedName("cityDto")
     val city: City,
     val name: String,
+    val author: String?,
     val description: String,
     val publishedAt: Timestamp?,
     @SerializedName("imagesDto")
