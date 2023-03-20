@@ -22,11 +22,18 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.view.MyBooksActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ui.view.EditProfileActivity"
             android:exported="false"
             android:label="@string/title_activity_edit_profile"
-            android:theme="@style/Theme.ShareBookApp.NoActionBar"
-            android:parentActivityName=".ui.view.MainActivity">
+            android:parentActivityName=".ui.view.MainActivity"
+            android:theme="@style/Theme.ShareBookApp.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

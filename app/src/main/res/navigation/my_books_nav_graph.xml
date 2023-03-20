@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_books_nav_graph"
+    app:startDestination="@id/myBooksFragment">
+    <fragment
+        android:id="@+id/myBooksFragment"
+        android:name="com.example.sharebookapp.ui.view.MyBooksFragment"
+        android:label="fragment_my_books"
+        tools:layout="@layout/fragment_my_books" />
+</navigation>

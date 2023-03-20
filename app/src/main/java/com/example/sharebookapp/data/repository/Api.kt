@@ -73,4 +73,10 @@ interface Api {
         @Body user: User,
         @Header("Authorization") token: String
     ): Response<User>
+
+    @GET("/publication")
+    suspend fun getPublicationByUser(
+        @Query("userId") id: Long,
+        @Header("Authorization") token: String
+    ): Response<List<Publication>>
 }

@@ -12,4 +12,5 @@ interface AppComponent {
     fun getMainActivityComponent(): MainActivityComponent
     fun getProfileActivityComponent(): ProfileActivityComponent
     fun getEditProfileActivityComponent(): EditProfileActivityComponent
+    fun getMyBooksActivityComponent(): MyBooksActivityComponent
 }
