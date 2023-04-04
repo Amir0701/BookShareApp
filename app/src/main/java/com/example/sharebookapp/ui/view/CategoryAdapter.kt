@@ -37,10 +37,22 @@ class CategoryAdapter @Inject constructor(): RecyclerView.Adapter<CategoryAdapte
                 it.background = it.context.getDrawable(R.drawable.category_item_selected)
                 holder.isSelected = true
             }
+
+            onGenreSelectedItem?.onGenreItemClick(category, holder.isSelected)
         }
     }
 
     override fun getItemCount(): Int {
         return categoryList.size
+    }
+
+    interface OnGenreSelectedItem{
+        fun onGenreItemClick(category: Category, isSelected: Boolean)
+    }
+
+    private var onGenreSelectedItem: OnGenreSelectedItem? = null
+
+    fun setOnGenreClickListener(onGenreSelectedItem: OnGenreSelectedItem){
+        this.onGenreSelectedItem = onGenreSelectedItem
     }
 }

@@ -119,7 +119,6 @@ class NewPublicationFragment : Fragment() {
                     Log.e("observeCity", resource.message.toString())
                 }
             }
-
         })
     }
 

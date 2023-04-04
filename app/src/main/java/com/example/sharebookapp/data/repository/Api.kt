@@ -79,4 +79,10 @@ interface Api {
         @Query("userId") id: Long,
         @Header("Authorization") token: String
     ): Response<List<Publication>>
+
+    @GET("/publication")
+    suspend fun getPublicationsByGenre(
+        @Query("categoryId") id: Long,
+        @Header("Authorization") token: String
+    ): Response<List<Publication>>
 }

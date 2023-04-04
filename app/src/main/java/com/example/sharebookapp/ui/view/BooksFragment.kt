@@ -90,6 +90,7 @@ class BooksFragment : Fragment() {
         observePublications()
         mainActivityViewModel.getAllPublications()
         observeSearchPublications()
+        observePublicationsByGenre()
     }
 
     private fun initRecyclerView(){
@@ -100,14 +101,24 @@ class BooksFragment : Fragment() {
     private fun initCategoryRecyclerView(){
         val list = mutableListOf<Category>()
         list.add(Category(1, "Роман", ArrayList()))
-        list.add(Category(2, "Триллер", ArrayList()))
-        list.add(Category(3, "Научная фантастика", ArrayList()))
+        list.add(Category(3, "Триллер", ArrayList()))
+        list.add(Category(2, "Научная фантастика", ArrayList()))
         list.add(Category(4, "Классика", ArrayList()))
         list.add(Category(5, "Экономика", ArrayList()))
         list.add(Category(6, "Право", ArrayList()))
         categoryAdapter.categoryList = list
         categoryRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         categoryRecyclerView.adapter = categoryAdapter
+        categoryAdapter.setOnGenreClickListener(object : CategoryAdapter.OnGenreSelectedItem{
+            override fun onGenreItemClick(category: Category, isSelected: Boolean) {
+                if(isSelected){
+                    mainActivityViewModel.getPublicationsByGenre(category.id)
+                }
+                else{
+                    mainActivityViewModel.getAllPublications()
+                }
+            }
+        })
     }
 
     private fun observePublications(){
@@ -127,7 +138,6 @@ class BooksFragment : Fragment() {
                     Log.e("all publications", resource.message.toString())
                 }
             }
-
         })
     }
 
@@ -146,7 +156,23 @@ class BooksFragment : Fragment() {
                 }
 
                 is Resource.Error -> {
-                    Log.i("search", resource.message.toString())
+                    Log.e("search", resource.message.toString())
+                }
+            }
+        })
+    }
+
+    private fun observePublicationsByGenre(){
+        mainActivityViewModel.publicationsByGenre.observe(viewLifecycleOwner, Observer { resource ->
+            when(resource){
+                is Resource.Loading -> Log.i("loading", "publications by genre is loading")
+
+                is Resource.Error -> Log.e("error", resource.message.toString())
+
+                is Resource.Success -> {
+                    resource.data?.let {
+                        adapter.setPublication(it)
+                    }
                 }
             }
         })
