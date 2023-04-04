@@ -1,8 +1,12 @@
 package com.example.sharebookapp.data.repository
 
 import com.example.sharebookapp.data.model.Publication
+import com.example.sharebookapp.ioc.scope.MainActivityScope
+import com.example.sharebookapp.ioc.scope.MyBooksScope
+import com.example.sharebookapp.ioc.scope.PublicationRepositoryScope
 import javax.inject.Inject
 
+@PublicationRepositoryScope
 class PublicationRepository @Inject constructor(private val api: Api) {
     suspend fun postPublication(publication: Publication, token: String) = api.postPublication(publication, token)
 
