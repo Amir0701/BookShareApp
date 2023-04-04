@@ -23,7 +23,7 @@
                 android:id="@+id/signupEmailTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Почта"
+                android:text="@string/email"
                 style="@style/LogInTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -44,7 +44,7 @@
                 android:id="@+id/signupNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Имя"
+                android:text="@string/user_name"
                 style="@style/LogInTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/signupEmailEditText"/>
@@ -65,7 +65,7 @@
                 android:id="@+id/signupPasswordTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Пароль"
+                android:text="@string/password"
                 style="@style/LogInTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/signupNameEditText"/>
@@ -88,7 +88,7 @@
                 android:id="@+id/signupPhoneNumberTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Телефон"
+                android:text="@string/phone_number"
                 style="@style/LogInTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/signupPasswordEditText"/>
@@ -110,7 +110,7 @@
                 android:id="@+id/signupButton"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="Зарегистрироваться"
+                android:text="@string/sign_up"
                 android:background="@drawable/login_button_background"
                 android:textSize="20sp"
                 android:gravity="center"
@@ -127,7 +127,7 @@
                 android:id="@+id/loginLink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Есть аккаунт? Войдите"
+                android:text="@string/sign_in_link"
                 android:textSize="20sp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"

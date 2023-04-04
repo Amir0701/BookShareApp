@@ -7,7 +7,7 @@
 
     <item
         android:id="@+id/newPublicationFragment"
-        android:title="Добавить"
+        android:title="@string/add"
         android:icon="@drawable/ic_post_add"/>
 
     <item

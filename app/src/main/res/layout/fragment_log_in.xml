@@ -11,8 +11,9 @@
         android:id="@+id/emailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Почта"
+        android:text="@string/email"
         style="@style/LogInTextView"
+        android:layout_marginTop="100dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -31,7 +32,7 @@
         android:id="@+id/passwordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Пароль"
+        android:text="@string/password"
         style="@style/LogInTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emailEditText" />
@@ -57,7 +58,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:background="@drawable/login_button_background"
-        android:text="Вход"
+        android:text="@string/enter"
         android:gravity="center"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -70,7 +71,7 @@
         android:id="@+id/regLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Зарегистрироваться"
+        android:text="@string/sign_up_link"
         android:textSize="20sp"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
