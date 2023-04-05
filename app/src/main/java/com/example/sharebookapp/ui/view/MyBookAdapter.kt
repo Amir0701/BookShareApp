@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @MyBooksScope
 class MyBookAdapter @Inject constructor() : RecyclerView.Adapter<MyBookAdapter.MyBookViewHolder>() {
-    val differ = object : DiffUtil.ItemCallback<Publication>(){
+    private val differ = object : DiffUtil.ItemCallback<Publication>(){
         override fun areItemsTheSame(oldItem: Publication, newItem: Publication): Boolean {
             return oldItem.id == newItem.id
         }
@@ -49,10 +49,16 @@ class MyBookAdapter @Inject constructor() : RecyclerView.Adapter<MyBookAdapter.M
         holder.genre.text = publication.category.name
         holder.date.text = publication.publishedAt.toString()
         holder.description.text = publication.description
-
+        publication.author?.let {
+            holder.author.text = it
+        }
         Glide.with(holder.itemView)
             .load(R.drawable.great)
             .into(holder.image)
+
+        holder.itemView.setOnClickListener {
+            onItemClickListener?.onItemClick(publication)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -61,5 +67,15 @@ class MyBookAdapter @Inject constructor() : RecyclerView.Adapter<MyBookAdapter.M
 
     fun setPublications(publications: List<Publication>){
         list.submitList(publications)
+    }
+
+    interface OnItemClickListener{
+        fun onItemClick(publication: Publication)
+    }
+
+    private var onItemClickListener: OnItemClickListener? = null
+
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener){
+        this.onItemClickListener = onItemClickListener
     }
 }

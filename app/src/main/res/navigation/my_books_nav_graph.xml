@@ -8,5 +8,17 @@
         android:id="@+id/myBooksFragment"
         android:name="com.example.sharebookapp.ui.view.MyBooksFragment"
         android:label="fragment_my_books"
-        tools:layout="@layout/fragment_my_books" />
+        tools:layout="@layout/fragment_my_books" >
+        <action
+            android:id="@+id/action_myBooksFragment_to_editBookFragment"
+            app:destination="@id/editBookFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editBookFragment"
+        android:name="com.example.sharebookapp.ui.view.EditBookFragment"
+        android:label="EditBookFragment" >
+        <argument
+            android:name="current_my_book"
+            app:argType="com.example.sharebookapp.data.model.Publication" />
+    </fragment>
 </navigation>

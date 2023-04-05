@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sharebookapp.App
 import com.example.sharebookapp.R
+import com.example.sharebookapp.data.model.Publication
 import com.example.sharebookapp.ui.model.MyBooksViewModel
 import com.example.sharebookapp.util.Resource
 import javax.inject.Inject
@@ -50,6 +52,14 @@ class MyBooksFragment : Fragment() {
     private fun setUpRecycler(){
         recyclerView.adapter = myBookAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
+
+        myBookAdapter.setOnItemClickListener(object : MyBookAdapter.OnItemClickListener{
+            override fun onItemClick(publication: Publication) {
+                val bundle = Bundle()
+                bundle.putSerializable("current_my_book", publication)
+                findNavController().navigate(R.id.action_myBooksFragment_to_editBookFragment, bundle)
+            }
+        })
     }
 
     private fun observe(){
