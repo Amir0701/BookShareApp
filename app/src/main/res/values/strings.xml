@@ -35,4 +35,7 @@
     <string name="new_password">Новый пароль</string>
     <string name="add">Добавить</string>
     <string name="done">Сделано</string>
+
+    <string name="no_connection">No Ethernet Connection</string>
+    <string name="error_in_connection">Error</string>
 </resources>
