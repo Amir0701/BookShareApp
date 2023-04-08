@@ -85,4 +85,10 @@ interface Api {
         @Query("categoryId") id: Long,
         @Header("Authorization") token: String
     ): Response<List<Publication>>
+
+    @PUT("/publication")
+    suspend fun updatePublication(
+        @Body publication: Publication,
+        @Header("Authorization") token: String
+    ): Response<Publication>
 }

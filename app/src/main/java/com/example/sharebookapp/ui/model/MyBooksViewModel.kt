@@ -71,6 +71,16 @@ class MyBooksViewModel(
         }
     }
 
+    fun updatePublication(publication: Publication) = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            if(hasInternetConnection()){
+                publicationRepository.updatePublication(publication, "Bearer ${app.accessToken}")
+            }
+        }catch (t: Throwable){
+
+        }
+    }
+
     private fun getPublicationResponse(response: Response<List<Publication>>): Resource<List<Publication>>{
         if(response.isSuccessful){
             response.body()?.let {

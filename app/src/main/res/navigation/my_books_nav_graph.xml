@@ -20,5 +20,8 @@
         <argument
             android:name="current_my_book"
             app:argType="com.example.sharebookapp.data.model.Publication" />
+        <action
+            android:id="@+id/action_editBookFragment_to_myBooksFragment"
+            app:destination="@id/myBooksFragment" />
     </fragment>
 </navigation>
