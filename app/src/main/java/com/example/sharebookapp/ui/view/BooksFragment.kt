@@ -122,7 +122,7 @@ class BooksFragment : Fragment() {
     }
 
     private fun observePublications(){
-        mainActivityViewModel.searchPublication.observe(viewLifecycleOwner, Observer { resource ->
+        mainActivityViewModel.publications.observe(viewLifecycleOwner, Observer { resource ->
             when(resource){
                 is Resource.Loading -> {
                     Log.i("loading", "All publications are loading")
@@ -130,6 +130,7 @@ class BooksFragment : Fragment() {
 
                 is Resource.Success -> {
                     resource.data?.let {
+                        Log.i("getpub", "Succ")
                         adapter.setPublication(it)
                     }
                 }
@@ -142,7 +143,7 @@ class BooksFragment : Fragment() {
     }
 
     private fun observeSearchPublications(){
-        mainActivityViewModel.publications.observe(viewLifecycleOwner, Observer { resource ->
+        mainActivityViewModel.searchPublication.observe(viewLifecycleOwner, Observer { resource ->
             when(resource){
                 is Resource.Loading -> {
                     Log.i("loading", "searching")

@@ -3,6 +3,7 @@ package com.example.sharebookapp.ui.model
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities.*
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -156,14 +157,15 @@ class MainActivityViewModel(private val app: App,
                 publications.postValue(getPublicationsResponse(response))
             }
             else{
-                publication.postValue(Resource.Error(app.resources.getString(R.string.no_connection)))
+                publications.postValue(Resource.Error(app.resources.getString(R.string.no_connection)))
             }
         }catch (t: Throwable){
-            publication.postValue(Resource.Error(app.resources.getString(R.string.error_in_connection)))
+            publications.postValue(Resource.Error(app.resources.getString(R.string.error_in_connection)))
         }
     }
 
     private fun getPublicationsResponse(response: Response<List<Publication>>): Resource<List<Publication>>{
+        Log.i("taggg", "res")
         if(response.isSuccessful){
             response.body()?.let {
                 return Resource.Success(it)

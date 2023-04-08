@@ -42,5 +42,8 @@
         android:name="com.example.sharebookapp.ui.view.NewPublicationFragment"
         android:label="fragment_new_publication"
         tools:layout="@layout/fragment_new_publication" >
+        <action
+            android:id="@+id/action_newPublicationFragment_to_booksFragment"
+            app:destination="@id/booksFragment" />
     </fragment>
 </navigation>

@@ -233,6 +233,7 @@ class NewPublicationFragment : Fragment() {
                     author,
                     desc,
                     null,
+                    ArrayList(),
                     ArrayList()
                 )
                 mainActivityViewModel.postPublication(publication = newPublication)
@@ -253,5 +254,6 @@ class NewPublicationFragment : Fragment() {
         }
 
         mainActivityViewModel.postImages(parts.toTypedArray(), publicationId)
+        findNavController().navigate(R.id.action_newPublicationFragment_to_booksFragment)
     }
 }

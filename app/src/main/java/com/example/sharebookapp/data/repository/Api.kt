@@ -33,7 +33,7 @@ interface Api {
         @Header("Authorization") token: String
     ): Response<Publication>
 
-    @POST("/image")
+    @POST("/image/upload")
     @Multipart
     suspend fun postImages(
         @Part body: Array<MultipartBody.Part>,

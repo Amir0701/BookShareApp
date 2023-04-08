@@ -14,7 +14,9 @@ data class Publication(
     val description: String,
     val publishedAt: Timestamp?,
     @SerializedName("imagesDto")
-    val images: List<Image>
+    val images: List<Image>,
+    @SerializedName("publicationImages")
+    val publicationImages: List<ByteArray>
 ): java.io.Serializable{
 
     override fun hashCode(): Int {
@@ -29,7 +31,7 @@ data class Publication(
             result = 31 * result + description.hashCode()
         }
         if(images.isNotEmpty()){
-            result = 31 * images.hashCode()
+            result = 31 * result + images.hashCode()
         }
 
         return result
