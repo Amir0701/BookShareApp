@@ -3,6 +3,7 @@ package com.example.sharebookapp.ui.model
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities.*
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,21 +14,26 @@ import com.example.sharebookapp.data.model.City
 import com.example.sharebookapp.data.model.Publication
 import com.example.sharebookapp.data.repository.CategoryRepository
 import com.example.sharebookapp.data.repository.CityRepository
+import com.example.sharebookapp.data.repository.ImageRepository
 import com.example.sharebookapp.data.repository.PublicationRepository
 import com.example.sharebookapp.util.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import retrofit2.Response
+import retrofit2.http.Multipart
 
 class MyBooksViewModel(
     val app: App,
     private val publicationRepository: PublicationRepository,
     private val categoryRepository: CategoryRepository,
-    private val cityRepository: CityRepository
+    private val cityRepository: CityRepository,
+    private val imageRepository: ImageRepository
     ): AndroidViewModel(app) {
      val publications = MutableLiveData<Resource<List<Publication>>>()
     val cityLiveData = MutableLiveData<Resource<List<City>>>()
     val categoryLiveData = MutableLiveData<Resource<List<Category>>>()
+    val updatedPublicationLiveDate = MutableLiveData<Resource<Publication>>()
 
     fun getPublications() = viewModelScope.launch(Dispatchers.IO) {
         try {
@@ -74,10 +80,24 @@ class MyBooksViewModel(
     fun updatePublication(publication: Publication) = viewModelScope.launch(Dispatchers.IO) {
         try {
             if(hasInternetConnection()){
-                publicationRepository.updatePublication(publication, "Bearer ${app.accessToken}")
+                updatedPublicationLiveDate.postValue(Resource.Loading())
+                val response = publicationRepository.updatePublication(publication, "Bearer ${app.accessToken}")
+                updatedPublicationLiveDate.postValue(updatedPublicationResponse(response))
+            }else{
+                updatedPublicationLiveDate.postValue(Resource.Error(app.resources.getString(R.string.no_connection)))
             }
         }catch (t: Throwable){
+            updatedPublicationLiveDate.postValue(Resource.Error(app.resources.getString(R.string.error_in_connection)))
+        }
+    }
 
+    fun postImage(multipartFiles: Array<MultipartBody.Part>, publicationId: Long) = viewModelScope.launch(Dispatchers.IO){
+        try {
+            if(hasInternetConnection()){
+                imageRepository.postImages(multipartFiles, publicationId, "Bearer ${app.accessToken}")
+            }
+        }catch (t: Throwable){
+            Log.e("error", t.message.toString())
         }
     }
 
@@ -102,6 +122,16 @@ class MyBooksViewModel(
     }
 
     private fun getCitiesResponse(response: Response<List<City>>): Resource<List<City>>{
+        if(response.isSuccessful){
+            response.body()?.let {
+                return Resource.Success(it)
+            }
+        }
+
+        return Resource.Error(response.message())
+    }
+
+    private fun updatedPublicationResponse(response: Response<Publication>): Resource<Publication>{
         if(response.isSuccessful){
             response.body()?.let {
                 return Resource.Success(it)
