@@ -3,13 +3,16 @@ package com.example.sharebookapp.ui.view
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.AttributeSet
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.view.get
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.Observer
@@ -23,6 +26,8 @@ import com.example.sharebookapp.data.model.Category
 import com.example.sharebookapp.data.model.Publication
 import com.example.sharebookapp.ui.model.MainActivityViewModel
 import com.example.sharebookapp.util.Resource
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -39,13 +44,12 @@ class BooksFragment : Fragment() {
     lateinit var mainActivityViewModel: MainActivityViewModel
     lateinit var booksRecycler: RecyclerView
     lateinit var searchView: EditText
-    lateinit var categoryRecyclerView: RecyclerView
+    lateinit var genreChipGroup: ChipGroup
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i("Frag", "Book Fragment")
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_books, container, false)
     }
@@ -55,7 +59,7 @@ class BooksFragment : Fragment() {
         (activity as MainActivity).mainActivityComponent.getBooksFragmentComponent().inject(this)
         booksRecycler = view.findViewById(R.id.booksRecyclerView)
         searchView = view.findViewById(R.id.booksSearchView)
-        categoryRecyclerView = view.findViewById(R.id.genreRecyclerView)
+        genreChipGroup = view.findViewById(R.id.genreChipGroup)
 
         adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
             override fun onItemClick(publication: Publication) {
@@ -66,7 +70,6 @@ class BooksFragment : Fragment() {
         })
 
         initRecyclerView()
-        initCategoryRecyclerView()
         var job: Job? = null
         searchView.addTextChangedListener { editable ->
             job?.cancel()
@@ -82,6 +85,25 @@ class BooksFragment : Fragment() {
                 }
             }
         }
+
+        genreChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+            checkedIds.let {
+                if(it.size > 0){
+                    val id = it[0]
+                    val chipText = (group[id] as Chip).text
+                    var i: Long = 0
+                    var catId: Long = 0
+                    mainActivityViewModel.categoryResponse.value?.data?.forEach { cat->
+                        if(cat.name == chipText)
+                            catId = i
+                        i++
+                    }
+
+                    mainActivityViewModel.getPublicationsByGenre(catId)
+                }else
+                    mainActivityViewModel.getAllPublications()
+            }
+        }
     }
 
     override fun onStart() {
@@ -89,36 +111,23 @@ class BooksFragment : Fragment() {
         mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
         observePublications()
         mainActivityViewModel.getAllPublications()
+        mainActivityViewModel.getAllCategories()
         observeSearchPublications()
         observePublicationsByGenre()
+        observeCategory()
+    }
+
+    private fun createChip(genreName: String){
+        val themedContext = ContextThemeWrapper(context, R.style.MyChip)
+        val chip = Chip(themedContext)
+        chip.text = genreName
+        chip.isCheckable = true
+        genreChipGroup.addView(chip)
     }
 
     private fun initRecyclerView(){
         booksRecycler.adapter = adapter
         booksRecycler.layoutManager = GridLayoutManager(context, 2)
-    }
-
-    private fun initCategoryRecyclerView(){
-        val list = mutableListOf<Category>()
-        list.add(Category(1, "Роман", ArrayList()))
-        list.add(Category(3, "Триллер", ArrayList()))
-        list.add(Category(2, "Научная фантастика", ArrayList()))
-        list.add(Category(4, "Классика", ArrayList()))
-        list.add(Category(5, "Экономика", ArrayList()))
-        list.add(Category(6, "Право", ArrayList()))
-        categoryAdapter.categoryList = list
-        categoryRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        categoryRecyclerView.adapter = categoryAdapter
-        categoryAdapter.setOnGenreClickListener(object : CategoryAdapter.OnGenreSelectedItem{
-            override fun onGenreItemClick(category: Category, isSelected: Boolean) {
-                if(isSelected){
-                    mainActivityViewModel.getPublicationsByGenre(category.id)
-                }
-                else{
-                    mainActivityViewModel.getAllPublications()
-                }
-            }
-        })
     }
 
     private fun observePublications(){
@@ -173,6 +182,22 @@ class BooksFragment : Fragment() {
                 is Resource.Success -> {
                     resource.data?.let {
                         adapter.setPublication(it)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun observeCategory(){
+        mainActivityViewModel.categoryResponse.observe(viewLifecycleOwner, Observer { resource ->
+            when(resource){
+                is Resource.Loading -> Log.i("loading", "publications by genre is loading")
+                is Resource.Error -> Log.e("error", resource.message.toString())
+                is Resource.Success ->{
+                    resource.data?.let {
+                        it.forEach { category ->
+                            createChip(category.name)
+                        }
                     }
                 }
             }
