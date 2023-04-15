@@ -38,8 +38,6 @@ import javax.inject.Inject
 class BooksFragment : Fragment() {
     @Inject
     lateinit var adapter: BookAdapter
-    @Inject
-    lateinit var categoryAdapter: CategoryAdapter
 
     lateinit var mainActivityViewModel: MainActivityViewModel
     lateinit var booksRecycler: RecyclerView
