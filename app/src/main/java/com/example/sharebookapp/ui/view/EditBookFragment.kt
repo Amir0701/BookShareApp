@@ -47,6 +47,7 @@ class EditBookFragment : Fragment() {
     private lateinit var publishButton: FloatingActionButton
     private lateinit var chooseImageButton: TextView
     private lateinit var publication: Publication
+    private lateinit var chooseImage: TextView
 
     private val CHOOSE_IMAGE: Int = 101
     private val fileUris = mutableListOf<Uri>()
@@ -67,6 +68,7 @@ class EditBookFragment : Fragment() {
         categorySpinner = view.findViewById(R.id.categoryList)
         publishButton = view.findViewById(R.id.publishButton)
         chooseImageButton = view.findViewById(R.id.addImageButton)
+        chooseImage = view.findViewById(R.id.addImageButton)
 
         publication = args.currentMyBook
         nameEditText.setText(publication.name)
@@ -86,6 +88,10 @@ class EditBookFragment : Fragment() {
             getPublication()?.let {
                 viewModel.updatePublication(it)
             }
+        }
+
+        chooseImage.setOnClickListener {
+            chooseImage()
         }
     }
 
