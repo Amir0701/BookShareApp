@@ -12,7 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.view.children
 import androidx.core.view.get
+import androidx.core.view.size
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.Observer
@@ -58,7 +60,6 @@ class BooksFragment : Fragment() {
         booksRecycler = view.findViewById(R.id.booksRecyclerView)
         searchView = view.findViewById(R.id.booksSearchView)
         genreChipGroup = view.findViewById(R.id.genreChipGroup)
-
         adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
             override fun onItemClick(publication: Publication) {
                 val bundle = Bundle()
@@ -88,13 +89,17 @@ class BooksFragment : Fragment() {
             checkedIds.let {
                 if(it.size > 0){
                     val id = it[0]
-                    val chipText = (group[id] as Chip).text
-                    var i: Long = 0
+                    var chipText = ""
+                    group.children.forEach { v->
+                        if(v.id == id){
+                            chipText = (v as Chip).text.toString()
+                        }
+                    }
+
                     var catId: Long = 0
                     mainActivityViewModel.categoryResponse.value?.data?.forEach { cat->
                         if(cat.name == chipText)
-                            catId = i
-                        i++
+                            catId = cat.id
                     }
 
                     mainActivityViewModel.getPublicationsByGenre(catId)
@@ -102,10 +107,7 @@ class BooksFragment : Fragment() {
                     mainActivityViewModel.getAllPublications()
             }
         }
-    }
 
-    override fun onStart() {
-        super.onStart()
         mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
         observePublications()
         mainActivityViewModel.getAllPublications()
@@ -113,6 +115,10 @@ class BooksFragment : Fragment() {
         observeSearchPublications()
         observePublicationsByGenre()
         observeCategory()
+    }
+
+    override fun onStart() {
+        super.onStart()
     }
 
     private fun createChip(genreName: String){
@@ -192,13 +198,16 @@ class BooksFragment : Fragment() {
                 is Resource.Loading -> Log.i("loading", "publications by genre is loading")
                 is Resource.Error -> Log.e("error", resource.message.toString())
                 is Resource.Success ->{
-                    resource.data?.let {
-                        it.forEach { category ->
-                            createChip(category.name)
+                    if(genreChipGroup.size == 0){
+                        resource.data?.let {
+                            it.forEach { category ->
+                                createChip(category.name)
+                            }
                         }
                     }
                 }
             }
         })
     }
+
 }

@@ -34,6 +34,7 @@ class MainActivityViewModel(private val app: App,
     val favoritePublication = MutableLiveData<Resource<List<Publication>>>()
     val searchPublication = MutableLiveData<Resource<List<Publication>>>()
     val publicationsByGenre = MutableLiveData<Resource<List<Publication>>>()
+    val userIdLiveData = MutableLiveData<Resource<User>>()
 
     fun getCurrentUser() = viewModelScope.launch(Dispatchers.IO) {
         try {
@@ -249,6 +250,31 @@ class MainActivityViewModel(private val app: App,
     }
 
     private fun responsePublicationsByGenre(response: Response<List<Publication>>): Resource<List<Publication>>{
+        if(response.isSuccessful){
+            response.body()?.let {
+                return Resource.Success(it)
+            }
+        }
+
+        return Resource.Error(response.message())
+    }
+
+    fun getUserById(userId: Long) = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            if(hasInternetConnection()){
+                userIdLiveData.postValue(Resource.Loading())
+                val response = userRepository.getUserById(userId, "Bearer ${app.accessToken}")
+                userIdLiveData.postValue(responseUserId(response))
+            }
+            else{
+                publicationsByGenre.postValue(Resource.Error(app.resources.getString(R.string.no_connection)))
+            }
+        }catch (t: Throwable){
+            publicationsByGenre.postValue(Resource.Error(app.resources.getString(R.string.error_in_connection)))
+        }
+    }
+
+    private fun responseUserId(response: Response<User>): Resource<User>{
         if(response.isSuccessful){
             response.body()?.let {
                 return Resource.Success(it)

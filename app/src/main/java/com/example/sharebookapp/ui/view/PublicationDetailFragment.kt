@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.sharebookapp.R
@@ -18,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class PublicationDetailFragment : Fragment() {
     private val args: PublicationDetailFragmentArgs by navArgs()
     private lateinit var mainActivityViewModel: MainActivityViewModel
+    private lateinit var phone: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +38,9 @@ class PublicationDetailFragment : Fragment() {
         val publicationCity: TextView = view.findViewById(R.id.cityDetailPublication)
         val publication = args.choosenPublication
         val addToFavorite: FloatingActionButton = view.findViewById(R.id.addToFavorite)
+        phone = view.findViewById(R.id.userLink)
+        mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
+        observeUserById()
 
         publicationName.text = publication.name
         publicationCategory.text = publication.category.name
@@ -49,11 +54,19 @@ class PublicationDetailFragment : Fragment() {
         addToFavorite.setOnClickListener {
             mainActivityViewModel.addToFavorite(publication.id)
         }
+
+        mainActivityViewModel.getUserById(publication.userId)
     }
 
     override fun onStart() {
         super.onStart()
-        mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
     }
 
+    private fun observeUserById(){
+        mainActivityViewModel.userIdLiveData.observe(viewLifecycleOwner, Observer { resource ->
+            resource.data?.let {user ->
+                phone.text = user.phoneNumber
+            }
+        })
+    }
 }

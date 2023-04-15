@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainActivityComponent = (application as App).appComponent.getMainActivityComponent()
-        setContentView(R.layout.activity_main)
         userRepository = mainActivityComponent.getUserRepository()
         cityRepository = mainActivityComponent.getCityRepository()
         categoryRepository = mainActivityComponent.getCategoryRepository()
@@ -44,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         val viewModelFactory = MainActivityViewModelFactory((application as App), userRepository, cityRepository, categoryRepository, publicationRepository, imageRepository)
         mainActivityViewModel = ViewModelProvider(this, viewModelFactory)[MainActivityViewModel::class.java]
+        setContentView(R.layout.activity_main)
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val navController: NavController = this.findNavController(R.id.bottomFragmentContainer)
         navController.let {

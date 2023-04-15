@@ -17,4 +17,6 @@ class UserRepository @Inject constructor(private val api: Api) {
     suspend fun changePassword(password: Password, token: String) = api.changePassword(password, token)
 
     suspend fun updateUser(user: User, token: String) = api.updateUser(user, token)
+
+    suspend fun getUserById(userId: Long, token: String) = api.getUserById(userId, token)
 }

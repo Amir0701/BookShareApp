@@ -91,4 +91,10 @@ interface Api {
         @Body publication: Publication,
         @Header("Authorization") token: String
     ): Response<Publication>
+
+    @GET("/user/{id}")
+    suspend fun getUserById(
+        @Path("id") userId: Long,
+        @Header("Authorization") token: String
+    ):Response<User>
 }
