@@ -52,17 +52,16 @@ class BookAdapter @Inject constructor(): RecyclerView.Adapter<BookAdapter.BookVi
 
         Log.i("imageim", currentPublication.publicationImages.size.toString())
         if(currentPublication.publicationImages.isNotEmpty()){
-            //val file = File("E:\\ShareBook\\55_MV5BMTkxNTk1ODcxNl5BMl5BanBnXkFtZTcwMDI1OTMzOQ@@._V1_")
-            //val bytes = file.readBytes()
             Glide.with(holder.itemView.context)
                 .load(currentPublication.publicationImages[0])
                 .into(holder.cardImage)
 
         }else{
             Glide.with(holder.itemView.context)
-                .load(R.drawable.great)
+                .load(R.drawable.unknown_image)
                 .into(holder.cardImage)
         }
+
         holder.itemView.setOnClickListener {
             onBookItemClickListener?.onItemClick(currentPublication)
         }
