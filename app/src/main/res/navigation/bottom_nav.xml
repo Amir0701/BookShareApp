@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_booksFragment_to_publicationDetailFragment"
             app:destination="@id/publicationDetailFragment" />
+        <action
+            android:id="@+id/action_booksFragment_to_filterDialog"
+            app:destination="@id/filterDialog" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
@@ -46,4 +49,8 @@
             android:id="@+id/action_newPublicationFragment_to_booksFragment"
             app:destination="@id/booksFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/filterDialog"
+        android:name="com.example.sharebookapp.ui.view.FilterDialog"
+        android:label="FilterDialog" />
 </navigation>

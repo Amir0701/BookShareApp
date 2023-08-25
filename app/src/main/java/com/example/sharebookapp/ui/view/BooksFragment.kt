@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.core.view.children
 import androidx.core.view.get
 import androidx.core.view.size
@@ -45,6 +46,7 @@ class BooksFragment : Fragment() {
     lateinit var booksRecycler: RecyclerView
     lateinit var searchView: EditText
     lateinit var genreChipGroup: ChipGroup
+    private lateinit var filterButton: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,6 +62,12 @@ class BooksFragment : Fragment() {
         booksRecycler = view.findViewById(R.id.booksRecyclerView)
         searchView = view.findViewById(R.id.booksSearchView)
         genreChipGroup = view.findViewById(R.id.genreChipGroup)
+        filterButton = view.findViewById(R.id.filterImageView)
+
+        filterButton.setOnClickListener{
+            findNavController().navigate(R.id.action_booksFragment_to_filterDialog)
+        }
+
         adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
             override fun onItemClick(publication: Publication) {
                 val bundle = Bundle()
