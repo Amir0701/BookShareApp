@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,9 +20,9 @@ import javax.inject.Inject
 class FavoritesFragment : Fragment() {
     @Inject
     lateinit var bookAdapter: BookAdapter
-    lateinit var mainActivityViewModel: MainActivityViewModel
-    lateinit var favoriteRecycler: RecyclerView
-
+    private lateinit var mainActivityViewModel: MainActivityViewModel
+    private lateinit var favoriteRecycler: RecyclerView
+    private lateinit var progressBar: ProgressBar
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +37,7 @@ class FavoritesFragment : Fragment() {
         (activity as MainActivity).mainActivityComponent.getFavoritesFragmentComponent()
             .inject(this)
         favoriteRecycler = view.findViewById(R.id.favoriteRecycler)
+        progressBar = view.findViewById(R.id.favoriteProgressBar)
         setUpRecycler()
         setUpClickListener()
     }
@@ -54,14 +56,17 @@ class FavoritesFragment : Fragment() {
                     resource.data?.let {
                         bookAdapter.setPublication(it)
                     }
+                    progressBar.visibility = View.GONE
                 }
 
                 is Resource.Loading -> {
                     Log.i("observeFavorite", "favorite publications is loading")
+                    progressBar.visibility = View.VISIBLE
                 }
 
                 is Resource.Error -> {
                     Log.e("observeFavorite", resource.message.toString())
+                    progressBar.visibility = View.GONE
                 }
             }
         })
