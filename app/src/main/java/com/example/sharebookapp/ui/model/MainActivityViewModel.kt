@@ -284,6 +284,39 @@ class MainActivityViewModel(private val app: App,
         return Resource.Error(response.message())
     }
 
+    fun getPublicationsByCity(cityName: String) = viewModelScope.launch(Dispatchers.IO){
+        publications.postValue(Resource.Loading())
+        var id: Long = 0
+        cityResponse.value?.data?.let {cities ->
+            for(city in cities){
+                if(city.name == cityName)
+                    id = city.id
+            }
+        }
+        try {
+            if(hasInternetConnection()){
+                val response = publicationRepository.getPublicationsByCity(id, "Bearer ${app.accessToken}")
+                val resource = getPublicationsByCityResponse(response)
+                publications.postValue(resource)
+            }
+            else{
+                publications.postValue(Resource.Error(app.resources.getString(R.string.no_connection)))
+            }
+        } catch (t: Throwable){
+            publications.postValue(Resource.Error(app.resources.getString(R.string.error_in_connection)))
+        }
+    }
+
+    private fun getPublicationsByCityResponse(response: Response<List<Publication>>): Resource<List<Publication>>{
+        if(response.isSuccessful){
+            response.body()?.let {
+                return Resource.Success(it)
+            }
+        }
+
+        return Resource.Error(response.message())
+    }
+
     private fun hasInternetConnection(): Boolean{
         val connectivityManager = app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = connectivityManager.activeNetwork ?: return false
