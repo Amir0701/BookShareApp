@@ -97,4 +97,10 @@ interface Api {
         @Path("id") userId: Long,
         @Header("Authorization") token: String
     ):Response<User>
+
+    @GET("/publication")
+    suspend fun getPublicationsByCity(
+        @Query("cityId") cityId: Long,
+        @Header("Authorization") token: String
+    ): Response<List<Publication>>
 }

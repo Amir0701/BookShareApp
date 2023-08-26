@@ -20,6 +20,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,6 +49,7 @@ class BooksFragment : Fragment() {
     lateinit var genreChipGroup: ChipGroup
     private lateinit var filterButton: ImageView
 
+    private val args: BooksFragmentArgs by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,8 +66,9 @@ class BooksFragment : Fragment() {
         genreChipGroup = view.findViewById(R.id.genreChipGroup)
         filterButton = view.findViewById(R.id.filterImageView)
 
-        filterButton.setOnClickListener{
-            findNavController().navigate(R.id.action_booksFragment_to_filterDialog)
+
+        filterButton.setOnClickListener {
+            findNavController().navigate(R.id.action_booksFragment_to_filterFragment)
         }
 
         adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
@@ -118,7 +121,12 @@ class BooksFragment : Fragment() {
 
         mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
         observePublications()
-        mainActivityViewModel.getAllPublications()
+        if(!args.cityName.equals("null")){
+            mainActivityViewModel.getPublicationsByCity(args.cityName!!)
+        }
+        else
+            mainActivityViewModel.getAllPublications()
+
         mainActivityViewModel.getAllCategories()
         observeSearchPublications()
         observePublicationsByGenre()

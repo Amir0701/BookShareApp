@@ -21,4 +21,5 @@ class PublicationRepository @Inject constructor(private val api: Api) {
     suspend fun getPublicationsByGenre(id: Long, token: String) = api.getPublicationsByGenre(id, token)
 
     suspend fun updatePublication(publication: Publication, token: String) = api.updatePublication(publication, token)
+    suspend fun getPublicationsByCity(cityId: Long, token: String) = api.getPublicationsByCity(cityId, token)
 }
