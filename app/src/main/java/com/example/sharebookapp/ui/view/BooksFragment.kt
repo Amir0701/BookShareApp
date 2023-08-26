@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.core.view.children
 import androidx.core.view.get
 import androidx.core.view.size
@@ -50,6 +51,7 @@ class BooksFragment : Fragment() {
     private lateinit var filterButton: ImageView
 
     private val args: BooksFragmentArgs by navArgs()
+    private lateinit var progressBar: ProgressBar
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,7 +67,7 @@ class BooksFragment : Fragment() {
         searchView = view.findViewById(R.id.booksSearchView)
         genreChipGroup = view.findViewById(R.id.genreChipGroup)
         filterButton = view.findViewById(R.id.filterImageView)
-
+        progressBar = view.findViewById(R.id.booksProgressBar)
 
         filterButton.setOnClickListener {
             findNavController().navigate(R.id.action_booksFragment_to_filterFragment)
@@ -155,6 +157,7 @@ class BooksFragment : Fragment() {
             when(resource){
                 is Resource.Loading -> {
                     Log.i("loading", "All publications are loading")
+                    progressBar.visibility = VISIBLE
                 }
 
                 is Resource.Success -> {
@@ -162,10 +165,12 @@ class BooksFragment : Fragment() {
                         Log.i("getpub", "Succ")
                         adapter.setPublication(it)
                     }
+                    progressBar.visibility = GONE
                 }
 
                 is Resource.Error -> {
                     Log.e("all publications", resource.message.toString())
+                    progressBar.visibility = GONE
                 }
             }
         })
@@ -195,14 +200,18 @@ class BooksFragment : Fragment() {
     private fun observePublicationsByGenre(){
         mainActivityViewModel.publicationsByGenre.observe(viewLifecycleOwner, Observer { resource ->
             when(resource){
-                is Resource.Loading -> Log.i("loading", "publications by genre is loading")
+                is Resource.Loading -> progressBar.visibility = VISIBLE
 
-                is Resource.Error -> Log.e("error", resource.message.toString())
+                is Resource.Error -> {
+                    progressBar.visibility = GONE
+                    Log.e("error", resource.message.toString())
+                }
 
                 is Resource.Success -> {
                     resource.data?.let {
                         adapter.setPublication(it)
                     }
+                    progressBar.visibility = GONE
                 }
             }
         })
