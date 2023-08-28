@@ -63,6 +63,26 @@ class BooksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).mainActivityComponent.getBooksFragmentComponent().inject(this)
+        initViews(view)
+        initRecyclerView()
+        setListenerToGroupChip()
+
+        mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
+        observePublications()
+
+        if(!args.cityName.equals("null")){
+            mainActivityViewModel.getPublicationsByCity(args.cityName!!)
+        }
+        else
+            mainActivityViewModel.getAllPublications()
+
+        mainActivityViewModel.getAllCategories()
+        observeSearchPublications()
+        observePublicationsByGenre()
+        observeCategory()
+    }
+
+    private fun initViews(view: View){
         booksRecycler = view.findViewById(R.id.booksRecyclerView)
         searchView = view.findViewById(R.id.booksSearchView)
         genreChipGroup = view.findViewById(R.id.genreChipGroup)
@@ -73,15 +93,6 @@ class BooksFragment : Fragment() {
             findNavController().navigate(R.id.action_booksFragment_to_filterFragment)
         }
 
-        adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
-            override fun onItemClick(publication: Publication) {
-                val bundle = Bundle()
-                bundle.putSerializable("choosenPublication", publication)
-                findNavController().navigate(R.id.action_booksFragment_to_publicationDetailFragment, bundle)
-            }
-        })
-
-        initRecyclerView()
         var job: Job? = null
         searchView.addTextChangedListener { editable ->
             job?.cancel()
@@ -97,7 +108,30 @@ class BooksFragment : Fragment() {
                 }
             }
         }
+    }
 
+    private fun createChip(genreName: String){
+        val themedContext = ContextThemeWrapper(context, R.style.MyChip)
+        val chip = Chip(themedContext)
+        chip.text = genreName
+        chip.isCheckable = true
+        genreChipGroup.addView(chip)
+    }
+
+    private fun initRecyclerView(){
+        booksRecycler.adapter = adapter
+        booksRecycler.layoutManager = GridLayoutManager(context, 2)
+
+        adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
+            override fun onItemClick(publication: Publication) {
+                val bundle = Bundle()
+                bundle.putSerializable("choosenPublication", publication)
+                findNavController().navigate(R.id.action_booksFragment_to_publicationDetailFragment, bundle)
+            }
+        })
+    }
+
+    private fun setListenerToGroupChip(){
         genreChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
             checkedIds.let {
                 if(it.size > 0){
@@ -120,38 +154,7 @@ class BooksFragment : Fragment() {
                     mainActivityViewModel.getAllPublications()
             }
         }
-
-        mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
-        observePublications()
-        if(!args.cityName.equals("null")){
-            mainActivityViewModel.getPublicationsByCity(args.cityName!!)
-        }
-        else
-            mainActivityViewModel.getAllPublications()
-
-        mainActivityViewModel.getAllCategories()
-        observeSearchPublications()
-        observePublicationsByGenre()
-        observeCategory()
     }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
-    private fun createChip(genreName: String){
-        val themedContext = ContextThemeWrapper(context, R.style.MyChip)
-        val chip = Chip(themedContext)
-        chip.text = genreName
-        chip.isCheckable = true
-        genreChipGroup.addView(chip)
-    }
-
-    private fun initRecyclerView(){
-        booksRecycler.adapter = adapter
-        booksRecycler.layoutManager = GridLayoutManager(context, 2)
-    }
-
     private fun observePublications(){
         mainActivityViewModel.publications.observe(viewLifecycleOwner, Observer { resource ->
             when(resource){
