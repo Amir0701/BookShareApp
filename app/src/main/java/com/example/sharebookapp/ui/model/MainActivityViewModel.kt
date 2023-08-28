@@ -16,6 +16,7 @@ import com.example.sharebookapp.data.model.User
 import com.example.sharebookapp.data.repository.*
 import com.example.sharebookapp.util.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -275,6 +276,39 @@ class MainActivityViewModel(private val app: App,
     }
 
     private fun responseUserId(response: Response<User>): Resource<User>{
+        if(response.isSuccessful){
+            response.body()?.let {
+                return Resource.Success(it)
+            }
+        }
+
+        return Resource.Error(response.message())
+    }
+
+    fun getPublicationsByCity(cityName: String) = viewModelScope.launch(Dispatchers.IO){
+        publications.postValue(Resource.Loading())
+        var id: Long = 0
+        cityResponse.value?.data?.let {cities ->
+            for(city in cities){
+                if(city.name == cityName)
+                    id = city.id
+            }
+        }
+        try {
+            if(hasInternetConnection()){
+                val response = publicationRepository.getPublicationsByCity(id, "Bearer ${app.accessToken}")
+                val resource = getPublicationsByCityResponse(response)
+                publications.postValue(resource)
+            }
+            else{
+                publications.postValue(Resource.Error(app.resources.getString(R.string.no_connection)))
+            }
+        } catch (t: Throwable){
+            publications.postValue(Resource.Error(app.resources.getString(R.string.error_in_connection)))
+        }
+    }
+
+    private fun getPublicationsByCityResponse(response: Response<List<Publication>>): Resource<List<Publication>>{
         if(response.isSuccessful){
             response.body()?.let {
                 return Resource.Success(it)

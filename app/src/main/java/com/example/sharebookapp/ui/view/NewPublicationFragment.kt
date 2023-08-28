@@ -56,6 +56,18 @@ class NewPublicationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViews(view)
+        addListener()
+
+        observeCity()
+        observeCategory()
+        observePublication()
+        mainActivityViewModel.getAllCities()
+        mainActivityViewModel.getAllCategories()
+
+    }
+
+    private fun initViews(view: View){
         chosenImageName = view.findViewById(R.id.chosenImageName)
         mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
         spinnerCity = view.findViewById(R.id.cityList)
@@ -69,13 +81,9 @@ class NewPublicationFragment : Fragment() {
         choseImageButton.setOnClickListener {
             chooseImage()
         }
+    }
 
-        observeCity()
-        observeCategory()
-        observePublication()
-        mainActivityViewModel.getAllCities()
-        mainActivityViewModel.getAllCategories()
-
+    private fun addListener(){
         addPublicationButton.setOnClickListener {
             val cityId = spinnerCity.selectedItemId
             val chosenCity = mainActivityViewModel.cityResponse.value?.data?.get(cityId.toInt())
@@ -95,7 +103,6 @@ class NewPublicationFragment : Fragment() {
             }
         }
     }
-
     private fun observeCity(){
         mainActivityViewModel.cityResponse.observe(viewLifecycleOwner, Observer {resource ->
             when(resource){

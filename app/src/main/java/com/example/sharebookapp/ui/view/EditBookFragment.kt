@@ -61,6 +61,20 @@ class EditBookFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initViews(view)
+        setData()
+        addListener()
+
+        viewModel = (activity as MyBooksActivity).myBooksViewModel
+        observeCity()
+        observeCategory()
+        observeUpdatedPublication()
+        viewModel.getCategories()
+        viewModel.getCities()
+    }
+
+    private fun initViews(view: View){
         nameEditText = view.findViewById(R.id.nameOfPublication)
         authorEditText = view.findViewById(R.id.authorOfPublication)
         descriptionEditText = view.findViewById(R.id.descriptionPublication)
@@ -69,21 +83,17 @@ class EditBookFragment : Fragment() {
         publishButton = view.findViewById(R.id.publishButton)
         chooseImageButton = view.findViewById(R.id.addImageButton)
         chooseImage = view.findViewById(R.id.addImageButton)
+    }
 
+    private fun setData(){
         publication = args.currentMyBook
         nameEditText.setText(publication.name)
         descriptionEditText.setText(publication.description)
         publication.author?.let {
             authorEditText.setText(it)
         }
-
-        viewModel = (activity as MyBooksActivity).myBooksViewModel
-        observeCity()
-        observeCategory()
-        observeUpdatedPublication()
-        viewModel.getCategories()
-        viewModel.getCities()
-
+    }
+    private fun addListener(){
         publishButton.setOnClickListener {
             getPublication()?.let {
                 viewModel.updatePublication(it)
@@ -94,7 +104,6 @@ class EditBookFragment : Fragment() {
             chooseImage()
         }
     }
-
     private fun observeCategory(){
         viewModel.categoryLiveData.observe(viewLifecycleOwner, Observer {resource ->
             when(resource){

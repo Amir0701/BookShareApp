@@ -12,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.core.view.children
 import androidx.core.view.get
 import androidx.core.view.size
@@ -19,6 +21,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.findFragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -45,7 +48,10 @@ class BooksFragment : Fragment() {
     lateinit var booksRecycler: RecyclerView
     lateinit var searchView: EditText
     lateinit var genreChipGroup: ChipGroup
+    private lateinit var filterButton: ImageView
 
+    private val args: BooksFragmentArgs by navArgs()
+    private lateinit var progressBar: ProgressBar
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,18 +63,36 @@ class BooksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).mainActivityComponent.getBooksFragmentComponent().inject(this)
+        initViews(view)
+        initRecyclerView()
+        setListenerToGroupChip()
+
+        mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
+        observePublications()
+
+        if(!args.cityName.equals("null")){
+            mainActivityViewModel.getPublicationsByCity(args.cityName!!)
+        }
+        else
+            mainActivityViewModel.getAllPublications()
+
+        mainActivityViewModel.getAllCategories()
+        observeSearchPublications()
+        observePublicationsByGenre()
+        observeCategory()
+    }
+
+    private fun initViews(view: View){
         booksRecycler = view.findViewById(R.id.booksRecyclerView)
         searchView = view.findViewById(R.id.booksSearchView)
         genreChipGroup = view.findViewById(R.id.genreChipGroup)
-        adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
-            override fun onItemClick(publication: Publication) {
-                val bundle = Bundle()
-                bundle.putSerializable("choosenPublication", publication)
-                findNavController().navigate(R.id.action_booksFragment_to_publicationDetailFragment, bundle)
-            }
-        })
+        filterButton = view.findViewById(R.id.filterImageView)
+        progressBar = view.findViewById(R.id.booksProgressBar)
 
-        initRecyclerView()
+        filterButton.setOnClickListener {
+            findNavController().navigate(R.id.action_booksFragment_to_filterFragment)
+        }
+
         var job: Job? = null
         searchView.addTextChangedListener { editable ->
             job?.cancel()
@@ -84,7 +108,30 @@ class BooksFragment : Fragment() {
                 }
             }
         }
+    }
 
+    private fun createChip(genreName: String){
+        val themedContext = ContextThemeWrapper(context, R.style.MyChip)
+        val chip = Chip(themedContext)
+        chip.text = genreName
+        chip.isCheckable = true
+        genreChipGroup.addView(chip)
+    }
+
+    private fun initRecyclerView(){
+        booksRecycler.adapter = adapter
+        booksRecycler.layoutManager = GridLayoutManager(context, 2)
+
+        adapter.setOnBookItemClickListener(object : BookAdapter.OnBookItemClickListener {
+            override fun onItemClick(publication: Publication) {
+                val bundle = Bundle()
+                bundle.putSerializable("choosenPublication", publication)
+                findNavController().navigate(R.id.action_booksFragment_to_publicationDetailFragment, bundle)
+            }
+        })
+    }
+
+    private fun setListenerToGroupChip(){
         genreChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
             checkedIds.let {
                 if(it.size > 0){
@@ -107,38 +154,13 @@ class BooksFragment : Fragment() {
                     mainActivityViewModel.getAllPublications()
             }
         }
-
-        mainActivityViewModel = (activity as MainActivity).mainActivityViewModel
-        observePublications()
-        mainActivityViewModel.getAllPublications()
-        mainActivityViewModel.getAllCategories()
-        observeSearchPublications()
-        observePublicationsByGenre()
-        observeCategory()
     }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
-    private fun createChip(genreName: String){
-        val themedContext = ContextThemeWrapper(context, R.style.MyChip)
-        val chip = Chip(themedContext)
-        chip.text = genreName
-        chip.isCheckable = true
-        genreChipGroup.addView(chip)
-    }
-
-    private fun initRecyclerView(){
-        booksRecycler.adapter = adapter
-        booksRecycler.layoutManager = GridLayoutManager(context, 2)
-    }
-
     private fun observePublications(){
         mainActivityViewModel.publications.observe(viewLifecycleOwner, Observer { resource ->
             when(resource){
                 is Resource.Loading -> {
                     Log.i("loading", "All publications are loading")
+                    progressBar.visibility = VISIBLE
                 }
 
                 is Resource.Success -> {
@@ -146,10 +168,12 @@ class BooksFragment : Fragment() {
                         Log.i("getpub", "Succ")
                         adapter.setPublication(it)
                     }
+                    progressBar.visibility = GONE
                 }
 
                 is Resource.Error -> {
                     Log.e("all publications", resource.message.toString())
+                    progressBar.visibility = GONE
                 }
             }
         })
@@ -179,14 +203,18 @@ class BooksFragment : Fragment() {
     private fun observePublicationsByGenre(){
         mainActivityViewModel.publicationsByGenre.observe(viewLifecycleOwner, Observer { resource ->
             when(resource){
-                is Resource.Loading -> Log.i("loading", "publications by genre is loading")
+                is Resource.Loading -> progressBar.visibility = VISIBLE
 
-                is Resource.Error -> Log.e("error", resource.message.toString())
+                is Resource.Error -> {
+                    progressBar.visibility = GONE
+                    Log.e("error", resource.message.toString())
+                }
 
                 is Resource.Success -> {
                     resource.data?.let {
                         adapter.setPublication(it)
                     }
+                    progressBar.visibility = GONE
                 }
             }
         })
