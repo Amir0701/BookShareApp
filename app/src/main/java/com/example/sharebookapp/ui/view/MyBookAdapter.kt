@@ -52,9 +52,17 @@ class MyBookAdapter @Inject constructor() : RecyclerView.Adapter<MyBookAdapter.M
         publication.author?.let {
             holder.author.text = it
         }
-        Glide.with(holder.itemView)
-            .load(R.drawable.great)
-            .into(holder.image)
+
+        if(publication.publicationImages.isNotEmpty()){
+            Glide.with(holder.itemView.context)
+                .load(publication.publicationImages[0])
+                .into(holder.image)
+
+        }else{
+            Glide.with(holder.itemView.context)
+                .load(R.drawable.unknown_image)
+                .into(holder.image)
+        }
 
         holder.itemView.setOnClickListener {
             onItemClickListener?.onItemClick(publication)

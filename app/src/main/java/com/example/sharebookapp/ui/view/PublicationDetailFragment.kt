@@ -47,9 +47,16 @@ class PublicationDetailFragment : Fragment() {
         publicationDescription.text = publication.description
         publicationCity.text = publication.city.name
 
-        Glide.with(requireContext())
-            .load(R.drawable.great)
-            .into(publicationImage)
+        if(publication.publicationImages.isNotEmpty()){
+            Glide.with(requireContext())
+                .load(publication.publicationImages[0])
+                .into(publicationImage)
+
+        }else{
+            Glide.with(requireContext())
+                .load(R.drawable.unknown_image)
+                .into(publicationImage)
+        }
 
         addToFavorite.setOnClickListener {
             mainActivityViewModel.addToFavorite(publication.id)
